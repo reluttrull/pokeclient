@@ -1,13 +1,18 @@
 import React, { useRef } from 'react';
 import { animate, useDrag, useValue, withSpring } from 'react-ui-animate';
+import { FaCircleInfo } from 'react-icons/fa6';
+import Modal from 'react-modal';
 import './App.css';
 
 const Card = ({data, startOffset}) => {
   const ref = useRef(null);
+  const uuid = crypto.randomUUID();
+  const [modalIsOpen, setIsOpen] = React.useState(false);
   const [translateX, setTranslateX] = useValue(startOffset);
   const [translateY, setTranslateY] = useValue(0);
 
   let urlstring = `url('${data.image}/low.webp')`;
+  let hqurlstring = `${data.image}/high.webp`;
   const [backgroundImage, setBackgroundImage] = useValue(urlstring);
   const Targets = {
     USERACTIVELEFT: 340,
@@ -22,6 +27,15 @@ const Card = ({data, startOffset}) => {
     USERBENCH4TOP: 368,
     USERBENCH5LEFT: 640,
     USERBENCH5TOP: 368,
+  }
+  
+  function openModal() {
+    console.log('got to method');
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
   }
 
   useDrag(ref, ({ down, movement }) => {
@@ -75,6 +89,7 @@ const Card = ({data, startOffset}) => {
   return (
     <>
     <animate.div
+      key={uuid}
       ref={ref}
       style={{
         position: 'absolute',
@@ -90,6 +105,22 @@ const Card = ({data, startOffset}) => {
         borderRadius: 4,
       }}
     />
+    <animate.div
+      style={{
+        position: 'absolute',
+        translateX,
+        translateY,
+      }}
+    >
+      <FaCircleInfo className="info-block" onClick={openModal} />
+    </animate.div>
+    <Modal className="card-overlay-container"
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Card Overlay"
+        onClick={closeModal}
+      ><img className="card-overlay" src={hqurlstring} />
+    </Modal>
     </>
   );
 };
