@@ -2,10 +2,13 @@ import React, { useRef } from 'react';
 import { animate, useDrag, useValue, withSpring } from 'react-ui-animate';
 import './App.css';
 
-const Card = () => {
+const Card = ({data, startOffset}) => {
   const ref = useRef(null);
-  const [translateX, setTranslateX] = useValue(0);
+  const [translateX, setTranslateX] = useValue(startOffset);
   const [translateY, setTranslateY] = useValue(0);
+
+  let urlstring = `url('${data.image}/low.webp')`;
+  const [backgroundImage, setBackgroundImage] = useValue(urlstring);
   const Targets = {
     USERACTIVELEFT: 340,
     USERACTIVETOP: 70,
@@ -65,7 +68,7 @@ const Card = () => {
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH5TOP)); 
       return;
     }
-    setTranslateX(down ? movement.x : withSpring(0));
+    setTranslateX(down ? movement.x : withSpring(startOffset));
     setTranslateY(down ? movement.y : withSpring(0));
   });
 
@@ -80,7 +83,7 @@ const Card = () => {
         translateY,
         width: 95,
         height: 140,
-        backgroundImage: `url('/testcards/bulba.png')`,
+        backgroundImage,
         backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
