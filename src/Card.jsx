@@ -4,7 +4,7 @@ import { FaCircleInfo } from 'react-icons/fa6';
 import Modal from 'react-modal';
 import './App.css';
 
-const Card = ({data, startOffset}) => {
+const Card = ({data, startOffset, positionCallback}) => {
   const ref = useRef(null);
   const uuid = crypto.randomUUID();
   const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -30,7 +30,6 @@ const Card = ({data, startOffset}) => {
   }
   
   function openModal() {
-    console.log('got to method');
     setIsOpen(true);
   }
 
@@ -39,12 +38,12 @@ const Card = ({data, startOffset}) => {
   }
 
   useDrag(ref, ({ down, movement }) => {
-    //console.log(movement);
     // active
     if (movement.x >= Targets.USERACTIVELEFT - 50 && movement.x <= Targets.USERACTIVELEFT + 50
         && movement.y >= Targets.USERACTIVETOP - 70 && movement.y <= Targets.USERACTIVETOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERACTIVELEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERACTIVETOP)); 
+      if (!down) positionCallback({ num: data.numberInDeck, pos: 0});
       return;
     }
     // bench 1
@@ -52,6 +51,7 @@ const Card = ({data, startOffset}) => {
         && movement.y >= Targets.USERBENCH1TOP - 70 && movement.y <= Targets.USERBENCH1TOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH1LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH1TOP)); 
+      if (!down) positionCallback({ num: data.numberInDeck, pos: 1});
       return;
     }
     // bench 2
@@ -59,6 +59,7 @@ const Card = ({data, startOffset}) => {
         && movement.y >= Targets.USERBENCH2TOP - 70 && movement.y <= Targets.USERBENCH2TOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH2LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH2TOP)); 
+      if (!down) positionCallback({ num: data.numberInDeck, pos: 2});
       return;
     }
     // bench 3
@@ -66,6 +67,7 @@ const Card = ({data, startOffset}) => {
         && movement.y >= Targets.USERBENCH3TOP - 70 && movement.y <= Targets.USERBENCH3TOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH3LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH3TOP)); 
+      if (!down) positionCallback({ num: data.numberInDeck, pos: 3});
       return;
     }
     // bench 4
@@ -73,6 +75,7 @@ const Card = ({data, startOffset}) => {
         && movement.y >= Targets.USERBENCH4TOP - 70 && movement.y <= Targets.USERBENCH4TOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH4LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH4TOP)); 
+      if (!down) positionCallback({ num: data.numberInDeck, pos: 4});
       return;
     }
     // bench 5
@@ -80,6 +83,7 @@ const Card = ({data, startOffset}) => {
         && movement.y >= Targets.USERBENCH5TOP - 70 && movement.y <= Targets.USERBENCH5TOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH5LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH5TOP)); 
+      if (!down) positionCallback({ num: data.numberInDeck, pos: 5});
       return;
     }
     setTranslateX(down ? movement.x : withSpring(startOffset));
