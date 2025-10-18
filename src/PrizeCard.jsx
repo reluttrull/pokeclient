@@ -5,9 +5,9 @@ import './App.css';
 const PrizeCard = ({prizeNum}) => {
   const ref = useRef(null);
   const regionX = 1000;
-  const regionY = 100;
+  const regionY = 10;
   const offsetX = (prizeNum % 2) * 95 + regionX;
-  const offsetY = (prizeNum % 3) * 140 + regionY;
+  const offsetY = (prizeNum % 3) * 100 + regionY;
 //   const [translateX, setTranslateX] = useValue(regionX + offsetX);
 //   const [translateY, setTranslateY] = useValue(regionY + offsetY);
 

@@ -17,7 +17,7 @@ const App = () => {
     switch (data.pos) {
       case 0:
         var card = cardsInPlay.find(c => c.numberInDeck == data.num); // TODO: handle when card moving from somewhere else
-        if (!active) setActive(card); // TODO: handle when another card is in the active spot
+        setActive(card); // TODO: handle when another card is in the active spot
         break;
       default:
         break;
@@ -27,6 +27,16 @@ const App = () => {
   function getRandomCard() {
     let rand = Math.floor(Math.random() * baseset.length);
     return baseset[rand];
+  }
+
+  function drawTopCard() {
+    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/drawcardfromdeck/${gameGuid.current}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      setCardsInPlay([...cardsInPlay, data]);
+    })
+    .catch(error => console.error('Error fetching data:', error));
   }
 
   // on page load
@@ -47,6 +57,7 @@ const App = () => {
     <>
     <div style={{position: 'absolute', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
     <div style={{position: 'absolute', top: '100px', left: '700px', width: '200px'}}>total cards in play = {cardsInPlay && cardsInPlay.length}</div>
+    <button onClick={drawTopCard} style={{position: 'absolute', top: '200px', left: '700px', width: '200px'}}>draw</button>
     <div id="user-active"></div>
     <div id="user-bench-1"></div>
     <div id="user-bench-2"></div>
@@ -57,10 +68,10 @@ const App = () => {
           <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
         ))}
     <PrizeCard prizeNum={0} />
-    <PrizeCard prizeNum={1} />
-    <PrizeCard prizeNum={2} />
     <PrizeCard prizeNum={3} />
+    <PrizeCard prizeNum={1} />
     <PrizeCard prizeNum={4} />
+    <PrizeCard prizeNum={2} />
     <PrizeCard prizeNum={5} />
     </>
   );
