@@ -1,15 +1,24 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from './Card.jsx';
 import PrizeCard from './PrizeCard.jsx';
 import './App.css';
 import baseset from './data/baseset.json';
 
 const App = () => {
+  const [gameStartData, setGameStartData] = useState({});
 
   function getRandomCard() {
     let rand = Math.floor(Math.random() * baseset.length);
     return baseset[rand];
   }
+
+  // on page load
+  useEffect(() => {
+    fetch('https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getnewgame/0')
+    .then(response => response.json())
+    .then(data => setGameStartData(data))
+    .catch(error => console.error('Error fetching data:', error));
+    }, []);
 
   return (
     <>
@@ -19,12 +28,10 @@ const App = () => {
     <div id="user-bench-3"></div>
     <div id="user-bench-4"></div>
     <div id="user-bench-5"></div>
-    <Card data={getRandomCard()} startOffset={0} />
-    <Card data={getRandomCard()} startOffset={20} />
-    <Card data={getRandomCard()} startOffset={40} />
-    <Card data={getRandomCard()} startOffset={60} />
-    <Card data={getRandomCard()} startOffset={80} />
-    <Card data={getRandomCard()} startOffset={100} />
+    {gameStartData && gameStartData.hand 
+    && gameStartData.hand.map((card, index) => (
+          <Card data={card} startOffset={index * 20} />
+        ))}
     <PrizeCard prizeNum={0} />
     <PrizeCard prizeNum={1} />
     <PrizeCard prizeNum={2} />
