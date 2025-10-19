@@ -7,17 +7,34 @@ import baseset from './data/baseset.json';
 const App = () => {
   const gameGuid = useRef(null);
   const mulligans = useRef(0);
-  const [cardsInPlay, setCardsInPlay] = useState([]);
+  const [hand, setHand] = useState([]);
   const [active, setActive] = useState(null);
   const [bench, setBench] = useState([]);
   
   const cardCallback = (data) => {
     // update where card is placed
     console.log(`card ${data.num} moved to ${data.pos}`);
+    var card = hand.concat(bench).concat(active).find(c => c.numberInDeck == data.num);
     switch (data.pos) {
       case 0:
-        var card = cardsInPlay.find(c => c.numberInDeck == data.num); // TODO: handle when card moving from somewhere else
+        // TODO: handle when card moving from somewhere else
         setActive(card); // TODO: handle when another card is in the active spot
+        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck));
+        else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck !== card.numberInDeck));
+        break;
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+        const nextBench = [
+          ...bench.slice(0, data.pos-1),
+          card,
+          ...bench.slice(data.pos-1)
+        ];
+        setBench(nextBench);
+        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck));
+        else if (active.numberInDeck == card.numberInDeck) setActive(null); 
         break;
       default:
         break;
@@ -33,8 +50,8 @@ const App = () => {
     fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/drawcardfromdeck/${gameGuid.current}`)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
-      setCardsInPlay([...cardsInPlay, data]);
+      console.log('draw card', data);
+      setHand([...hand, data]);
     })
     .catch(error => console.error('Error fetching data:', error));
   }
@@ -46,7 +63,7 @@ const App = () => {
     .then(data => {
       if (!data) throw "Game data empty!";
       if (data.gameGuid) gameGuid.current = data.gameGuid;
-      if (data.hand) setCardsInPlay(data.hand);
+      if (data.hand) setHand(data.hand);
       if (data.mulligans) mulligans.current = data.mulligans;
     })
     .catch(error => console.error('Error fetching data:', error));
@@ -56,16 +73,29 @@ const App = () => {
   return (
     <>
     <div style={{position: 'absolute', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
-    <div style={{position: 'absolute', top: '100px', left: '700px', width: '200px'}}>total cards in play = {cardsInPlay && cardsInPlay.length}</div>
-    <button onClick={drawTopCard} style={{position: 'absolute', top: '200px', left: '700px', width: '200px'}}>draw</button>
-    <div id="user-active"></div>
-    <div id="user-bench-1"></div>
-    <div id="user-bench-2"></div>
-    <div id="user-bench-3"></div>
-    <div id="user-bench-4"></div>
-    <div id="user-bench-5"></div>
+    <div style={{position: 'absolute', top: '90px', left: '700px', width: '200px'}}># cards in hand = {hand && hand.length}</div>
+    <div style={{position: 'absolute', top: '160px', left: '700px', width: '200px'}}># cards in bench = {bench && bench.length}</div>
+    <button onClick={drawTopCard} style={{position: 'absolute', top: '240px', left: '700px', width: '200px'}}>draw</button>
+    <div id="user-active">
+      {active && <Card key={active.numberInDeck} data={active} positionCallback={cardCallback} />}
+    </div>
+    <div id="user-bench-1">
+      {bench.length > 0 && <Card key={bench[0].numberInDeck} data={bench[0]} positionCallback={cardCallback} />}
+    </div>
+    <div id="user-bench-2">
+      {bench.length > 1 && <Card key={bench[1].numberInDeck} data={bench[1]} positionCallback={cardCallback} />}
+    </div>
+    <div id="user-bench-3">
+      {bench.length > 2 && <Card key={bench[2].numberInDeck} data={bench[2]} positionCallback={cardCallback} />}
+    </div>
+    <div id="user-bench-4">
+      {bench.length > 3 && <Card key={bench[3].numberInDeck} data={bench[3]} positionCallback={cardCallback} />}
+    </div>
+    <div id="user-bench-5">
+      {bench.length > 4 && <Card key={bench[4].numberInDeck} data={bench[4]} positionCallback={cardCallback} />}
+    </div>
     <div id="discard-area"></div>
-    {cardsInPlay.map((card, index) => (
+    {hand.map((card, index) => (
           <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
         ))}
     <PrizeCard prizeNum={0} />
