@@ -95,6 +95,15 @@
   background-color: lightblue;
 }
 
+#discard-area {
+  position: absolute;
+  top: 420px;
+  left: 1050px;
+  width: 100px;
+  height: 140px;
+  background-color: gray;
+}
+
 .info-block {
   position: absolute;
   top: -20px;  

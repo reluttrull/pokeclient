@@ -64,6 +64,7 @@ const App = () => {
     <div id="user-bench-3"></div>
     <div id="user-bench-4"></div>
     <div id="user-bench-5"></div>
+    <div id="discard-area"></div>
     {cardsInPlay.map((card, index) => (
           <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
         ))}
