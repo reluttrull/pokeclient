@@ -27,6 +27,8 @@ const Card = ({data, startOffset, positionCallback}) => {
     USERBENCH4TOP: 368,
     USERBENCH5LEFT: 640,
     USERBENCH5TOP: 368,
+    DISCARDPILELEFT: 890,
+    DISCARDPILETOP: 384,
   }
   
   function openModal() {
@@ -38,6 +40,7 @@ const Card = ({data, startOffset, positionCallback}) => {
   }
 
   useDrag(ref, ({ down, movement }) => {
+    console.log(movement);
     // active
     if (movement.x >= Targets.USERACTIVELEFT - 50 && movement.x <= Targets.USERACTIVELEFT + 50
         && movement.y >= Targets.USERACTIVETOP - 70 && movement.y <= Targets.USERACTIVETOP + 70) {
@@ -84,6 +87,14 @@ const Card = ({data, startOffset, positionCallback}) => {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH5LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH5TOP)); 
       if (!down) positionCallback({ num: data.numberInDeck, pos: 5});
+      return;
+    }
+    // discard
+    if (movement.x >= Targets.DISCARDPILELEFT - 50 && movement.x <= Targets.DISCARDPILELEFT + 50
+        && movement.y >= Targets.DISCARDPILETOP - 70 && movement.y <= Targets.DISCARDPILETOP + 70) {
+      setTranslateX(down ? movement.x : withSpring(Targets.DISCARDPILELEFT + 2));
+      setTranslateY(down ? movement.y : withSpring(Targets.DISCARDPILETOP)); 
+      if (!down) positionCallback({ num: data.numberInDeck, pos: 6});
       return;
     }
     setTranslateX(down ? movement.x : withSpring(startOffset));

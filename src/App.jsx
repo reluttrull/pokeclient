@@ -36,6 +36,9 @@ const App = () => {
         if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck));
         else if (active.numberInDeck == card.numberInDeck) setActive(null); 
         break;
+      case 6:
+        console.log('moving to discard');
+        break;
       default:
         break;
     }
@@ -77,22 +80,22 @@ const App = () => {
     <div style={{position: 'absolute', top: '160px', left: '700px', width: '200px'}}># cards in bench = {bench && bench.length}</div>
     <button onClick={drawTopCard} style={{position: 'absolute', top: '240px', left: '700px', width: '200px'}}>draw</button>
     <div id="user-active">
-      {active && <Card key={active.numberInDeck} data={active} positionCallback={cardCallback} />}
+      {active && <Card key={active.numberInDeck} data={active} startOffset={0} positionCallback={cardCallback} />}
     </div>
     <div id="user-bench-1">
-      {bench.length > 0 && <Card key={bench[0].numberInDeck} data={bench[0]} positionCallback={cardCallback} />}
+      {bench.length > 0 && <Card key={bench[0].numberInDeck} data={bench[0]} startOffset={0} positionCallback={cardCallback} />}
     </div>
     <div id="user-bench-2">
-      {bench.length > 1 && <Card key={bench[1].numberInDeck} data={bench[1]} positionCallback={cardCallback} />}
+      {bench.length > 1 && <Card key={bench[1].numberInDeck} data={bench[1]} startOffset={0} positionCallback={cardCallback} />}
     </div>
     <div id="user-bench-3">
-      {bench.length > 2 && <Card key={bench[2].numberInDeck} data={bench[2]} positionCallback={cardCallback} />}
+      {bench.length > 2 && <Card key={bench[2].numberInDeck} data={bench[2]} startOffset={0} positionCallback={cardCallback} />}
     </div>
     <div id="user-bench-4">
-      {bench.length > 3 && <Card key={bench[3].numberInDeck} data={bench[3]} positionCallback={cardCallback} />}
+      {bench.length > 3 && <Card key={bench[3].numberInDeck} data={bench[3]} startOffset={0} positionCallback={cardCallback} />}
     </div>
     <div id="user-bench-5">
-      {bench.length > 4 && <Card key={bench[4].numberInDeck} data={bench[4]} positionCallback={cardCallback} />}
+      {bench.length > 4 && <Card key={bench[4].numberInDeck} data={bench[4]} startOffset={0} positionCallback={cardCallback} />}
     </div>
     <div id="discard-area"></div>
     {hand.map((card, index) => (
