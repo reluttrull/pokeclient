@@ -10,6 +10,7 @@ const App = () => {
   const [hand, setHand] = useState([]);
   const [active, setActive] = useState(null);
   const [bench, setBench] = useState([]);
+  const [discard, setDiscard] = useState([]);
   
   const cardCallback = (data) => {
     // update where card is placed
@@ -38,6 +39,10 @@ const App = () => {
         break;
       case 6:
         console.log('moving to discard');
+        setDiscard([card, ...discard]);
+        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck));
+        else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck !== card.numberInDeck));
+        else if (active.numberInDeck == card.numberInDeck) setActive(null); 
         discardCard(card);
         break;
       default:
@@ -114,7 +119,9 @@ const App = () => {
     <div id="user-bench-5">
       {bench.length > 4 && <Card key={bench[4].numberInDeck} data={bench[4]} startOffset={0} positionCallback={cardCallback} />}
     </div>
-    <div id="discard-area"></div>
+    <div id="discard-area">
+      {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />}
+    </div>
     {hand.map((card, index) => (
           <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
         ))}

@@ -15,20 +15,20 @@ const Card = ({data, startOffset, positionCallback}) => {
   let hqurlstring = `${data.image}/high.webp`;
   const [backgroundImage, setBackgroundImage] = useValue(urlstring);
   const Targets = {
-    USERACTIVELEFT: 340,
-    USERACTIVETOP: 70,
-    USERBENCH1LEFT: 40,
-    USERBENCH1TOP: 368,
-    USERBENCH2LEFT: 190,
-    USERBENCH2TOP: 368,
-    USERBENCH3LEFT: 340,
-    USERBENCH3TOP: 368,
-    USERBENCH4LEFT: 490,
-    USERBENCH4TOP: 368,
-    USERBENCH5LEFT: 640,
-    USERBENCH5TOP: 368,
-    DISCARDPILELEFT: 890,
-    DISCARDPILETOP: 384,
+    USERACTIVELEFT: 550,
+    USERACTIVETOP: 165,
+    USERBENCH1LEFT: 250,
+    USERBENCH1TOP: 465,
+    USERBENCH2LEFT: 400,
+    USERBENCH2TOP: 465,
+    USERBENCH3LEFT: 550,
+    USERBENCH3TOP: 465,
+    USERBENCH4LEFT: 700,
+    USERBENCH4TOP: 465,
+    USERBENCH5LEFT: 850,
+    USERBENCH5TOP: 465,
+    DISCARDPILELEFT: 1100,
+    DISCARDPILETOP: 485,
   }
   
   function openModal() {
@@ -39,59 +39,65 @@ const Card = ({data, startOffset, positionCallback}) => {
     setIsOpen(false);
   }
 
-  useDrag(ref, ({ down, movement }) => {
-    console.log(movement);
+  useDrag(ref, ({ down, movement }) => { // TODO: refactor this mess
+    //console.log(movement);
+    if (!ref.current) return;
+
+    const rect = ref.current.getBoundingClientRect();
+    const cardCenterX = rect.left + rect.width / 2;
+    const cardCenterY = rect.top + rect.height / 2;
+    //console.log(cardCenterX, cardCenterY);
     // active
-    if (movement.x >= Targets.USERACTIVELEFT - 50 && movement.x <= Targets.USERACTIVELEFT + 50
-        && movement.y >= Targets.USERACTIVETOP - 70 && movement.y <= Targets.USERACTIVETOP + 70) {
+    if (cardCenterX >= Targets.USERACTIVELEFT - 50 && cardCenterX <= Targets.USERACTIVELEFT + 50
+        && cardCenterY >= Targets.USERACTIVETOP - 70 && cardCenterY <= Targets.USERACTIVETOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERACTIVELEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERACTIVETOP)); 
       if (!down) positionCallback({ num: data.numberInDeck, pos: 0});
       return;
     }
     // bench 1
-    if (movement.x >= Targets.USERBENCH1LEFT - 50 && movement.x <= Targets.USERBENCH1LEFT + 50
-        && movement.y >= Targets.USERBENCH1TOP - 70 && movement.y <= Targets.USERBENCH1TOP + 70) {
+    if (cardCenterX >= Targets.USERBENCH1LEFT - 50 && cardCenterX <= Targets.USERBENCH1LEFT + 50
+        && cardCenterY >= Targets.USERBENCH1TOP - 70 && cardCenterY <= Targets.USERBENCH1TOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH1LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH1TOP)); 
       if (!down) positionCallback({ num: data.numberInDeck, pos: 1});
       return;
     }
     // bench 2
-    if (movement.x >= Targets.USERBENCH2LEFT - 50 && movement.x <= Targets.USERBENCH2LEFT + 50
-        && movement.y >= Targets.USERBENCH2TOP - 70 && movement.y <= Targets.USERBENCH2TOP + 70) {
+    if (cardCenterX >= Targets.USERBENCH2LEFT - 50 && cardCenterX <= Targets.USERBENCH2LEFT + 50
+        && cardCenterY >= Targets.USERBENCH2TOP - 70 && cardCenterY <= Targets.USERBENCH2TOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH2LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH2TOP)); 
       if (!down) positionCallback({ num: data.numberInDeck, pos: 2});
       return;
     }
     // bench 3
-    if (movement.x >= Targets.USERBENCH3LEFT - 50 && movement.x <= Targets.USERBENCH3LEFT + 50
-        && movement.y >= Targets.USERBENCH3TOP - 70 && movement.y <= Targets.USERBENCH3TOP + 70) {
+    if (cardCenterX >= Targets.USERBENCH3LEFT - 50 && cardCenterX <= Targets.USERBENCH3LEFT + 50
+        && cardCenterY >= Targets.USERBENCH3TOP - 70 && cardCenterY <= Targets.USERBENCH3TOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH3LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH3TOP)); 
       if (!down) positionCallback({ num: data.numberInDeck, pos: 3});
       return;
     }
     // bench 4
-    if (movement.x >= Targets.USERBENCH4LEFT - 50 && movement.x <= Targets.USERBENCH4LEFT + 50
-        && movement.y >= Targets.USERBENCH4TOP - 70 && movement.y <= Targets.USERBENCH4TOP + 70) {
+    if (cardCenterX >= Targets.USERBENCH4LEFT - 50 && cardCenterX <= Targets.USERBENCH4LEFT + 50
+        && cardCenterY >= Targets.USERBENCH4TOP - 70 && cardCenterY <= Targets.USERBENCH4TOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH4LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH4TOP)); 
       if (!down) positionCallback({ num: data.numberInDeck, pos: 4});
       return;
     }
     // bench 5
-    if (movement.x >= Targets.USERBENCH5LEFT - 50 && movement.x <= Targets.USERBENCH5LEFT + 50
-        && movement.y >= Targets.USERBENCH5TOP - 70 && movement.y <= Targets.USERBENCH5TOP + 70) {
+    if (cardCenterX >= Targets.USERBENCH5LEFT - 50 && cardCenterX <= Targets.USERBENCH5LEFT + 50
+        && cardCenterY >= Targets.USERBENCH5TOP - 70 && cardCenterY <= Targets.USERBENCH5TOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.USERBENCH5LEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.USERBENCH5TOP)); 
       if (!down) positionCallback({ num: data.numberInDeck, pos: 5});
       return;
     }
     // discard
-    if (movement.x >= Targets.DISCARDPILELEFT - 50 && movement.x <= Targets.DISCARDPILELEFT + 50
-        && movement.y >= Targets.DISCARDPILETOP - 70 && movement.y <= Targets.DISCARDPILETOP + 70) {
+    if (cardCenterX >= Targets.DISCARDPILELEFT - 50 && cardCenterX <= Targets.DISCARDPILELEFT + 50
+        && cardCenterY >= Targets.DISCARDPILETOP - 70 && cardCenterY <= Targets.DISCARDPILETOP + 70) {
       setTranslateX(down ? movement.x : withSpring(Targets.DISCARDPILELEFT + 2));
       setTranslateY(down ? movement.y : withSpring(Targets.DISCARDPILETOP)); 
       if (!down) positionCallback({ num: data.numberInDeck, pos: 6});
