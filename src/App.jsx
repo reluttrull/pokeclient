@@ -38,6 +38,7 @@ const App = () => {
         break;
       case 6:
         console.log('moving to discard');
+        discardCard(card);
         break;
       default:
         break;
@@ -57,6 +58,22 @@ const App = () => {
       setHand([...hand, data]);
     })
     .catch(error => console.error('Error fetching data:', error));
+  }
+
+  function discardCard(card) {
+    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/discardcard/${gameGuid.current}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(card),
+      })
+      .then(response => {
+        if (response.status == 204) console.log('discarded card successfully');
+        else console.log(response);
+      })
+      .catch(error => console.error('Error discarding card:', error));
   }
 
   // on page load
