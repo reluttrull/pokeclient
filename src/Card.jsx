@@ -72,6 +72,7 @@ const Card = ({data, startOffset, positionCallback}) => {
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         borderRadius: 4,
+        zIndex: 1000
       }}
     />
     <animate.div

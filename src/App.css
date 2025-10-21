@@ -35,73 +35,60 @@
 
 .card {
   padding: 2em;
+  z-index: 1;
 }
 
 .read-the-docs {
   color: #888;
 }
 
-#user-active {
+.card-target {
   position: absolute;
-  top: 100px;
-  left: 500px;
+  z-index: 0;
   width: 100px;
   height: 140px;
-  background-color: red;
+}
+
+#user-active {
+  top: 100px;
+  left: 500px;
+  background-color: rgba(200, 10, 10, 0.5);
 }
 
 #user-bench-1 {
-  position: absolute;
   top: 400px;
   left: 200px;
-  width: 100px;
-  height: 140px;
-  background-color: lightblue;
+  background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-2 {
-  position: absolute;
   top: 400px;
   left: 350px;
-  width: 100px;
-  height: 140px;
-  background-color: lightblue;
+  background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-3 {
-  position: absolute;
   top: 400px;
   left: 500px;
-  width: 100px;
-  height: 140px;
-  background-color: lightblue;
+  background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-4 {
-  position: absolute;
   top: 400px;
   left: 650px;
-  width: 100px;
-  height: 140px;
-  background-color: lightblue;
+  background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-5 {
-  position: absolute;
   top: 400px;
   left: 800px;
-  width: 100px;
-  height: 140px;
-  background-color: lightblue;
+  background-color: rgba(170, 220, 230, 0.5);
 }
 
 #discard-area {
-  position: absolute;
   top: 420px;
   left: 1050px;
-  width: 100px;
-  height: 140px;
-  background-color: gray;
+  background-color: rgba(120, 120, 120, 0.5);
 }
 
 .info-block {
