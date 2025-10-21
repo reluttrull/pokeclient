@@ -18,8 +18,7 @@ const App = () => {
     var card = hand.concat(bench).concat(active).find(c => c.numberInDeck == data.num);
     switch (data.pos) {
       case 0:
-        // TODO: handle when card moving from somewhere else
-        setActive(card); // TODO: handle when another card is in the active spot
+        setActive(card); // TODO: handle when another card is in the active spot?
         if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck));
         else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck !== card.numberInDeck));
         break;
