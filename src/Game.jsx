@@ -4,7 +4,7 @@ import PrizeCard from './PrizeCard.jsx';
 import './App.css';
 import baseset from './data/baseset.json';
 
-const Game = () => {
+const Game = ({gameStateCallback}) => {
   const gameGuid = useRef(null);
   const mulligans = useRef(0);
   const [hand, setHand] = useState([]);
@@ -80,6 +80,24 @@ const Game = () => {
       .catch(error => console.error('Error discarding card:', error));
   }
 
+  function endGame() {
+    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/endgame/${gameGuid.current}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        if (response.status == 204) {
+          console.log('game ended successfully');
+          gameStateCallback({ ended: true });
+        }
+        else console.log(response);
+      })
+      .catch(error => console.error('Error ending game:', error));
+  }
+
   // on page load
   useEffect(() => {
     if (!gameGuid.current) {
@@ -103,6 +121,7 @@ const Game = () => {
     <div style={{position: 'absolute', top: '90px', left: '700px', width: '200px'}}># cards in hand = {hand && hand.length}</div>
     <div style={{position: 'absolute', top: '160px', left: '700px', width: '200px'}}># cards in bench = {bench && bench.length}</div>
     <button onClick={drawTopCard} style={{position: 'absolute', top: '240px', left: '700px', width: '200px'}}>draw</button>
+    <button onClick={endGame} style={{position: 'absolute', top: '280px', left: '700px', width: '200px'}}>end game</button>
     <div id="user-active" className="card-target">
       {active && <Card key={active.numberInDeck} data={active} startOffset={0} positionCallback={cardCallback} />}
     </div>
