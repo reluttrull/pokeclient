@@ -91,6 +91,22 @@
   background-color: rgba(120, 120, 120, 0.5);
 }
 
+#draw-card-button {
+  position: absolute;
+  top: 240px; 
+  left: 700px;
+  width: 200px;
+  background-color: rgba(20, 20, 20, 0.7);
+}
+
+#end-game-button {
+  position: absolute;
+  top: 300px; 
+  left: 700px;
+  width: 200px;
+  background-color: rgba(200, 10, 10, 0.7);
+}
+
 .info-block {
   position: absolute;
   top: -20px;  
