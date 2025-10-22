@@ -113,6 +113,16 @@
   cursor: pointer;
 }
 
+.energy-icon {
+  position: absolute;
+  top: -20px; 
+}
+
+.energy-icon > img {
+  width: 15px;
+  height: 15px;
+}
+
 .card-overlay-container {
   position:relative;
 }

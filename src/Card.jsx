@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { animate, useDrag, useValue, withSpring } from 'react-ui-animate';
 import { FaCircleInfo } from 'react-icons/fa6';
 import Modal from 'react-modal';
+import AttachedEnergy from './AttachedEnergy.jsx';
 import './App.css';
 
 const Card = ({data, startOffset, positionCallback}) => {
@@ -83,6 +84,10 @@ const Card = ({data, startOffset, positionCallback}) => {
       }}
     >
       <FaCircleInfo className="info-block" onClick={openModal} />
+      {data.attachedCards.filter((attachedCard) => attachedCard.category == "Energy")
+          .map((card, index) => (
+        <AttachedEnergy key={card.numberInDeck} cardName={card.name} offset={index * 20} />
+      ))}
     </animate.div>
     <Modal className="card-overlay-container"
         isOpen={modalIsOpen}

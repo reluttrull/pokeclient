@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { useValue } from 'react-ui-animate';
 import './App.css';
 
 const PrizeCard = ({prizeNum}) => {
@@ -8,11 +7,6 @@ const PrizeCard = ({prizeNum}) => {
   const regionY = 10;
   const offsetX = (prizeNum % 2) * 95 + regionX;
   const offsetY = (prizeNum % 3) * 100 + regionY;
-//   const [translateX, setTranslateX] = useValue(regionX + offsetX);
-//   const [translateY, setTranslateY] = useValue(regionY + offsetY);
-
-  let urlstring = `url('/cardback.png')`;
-//   const [backgroundImage, setBackgroundImage] = useValue(urlstring);
 
   return (
     <>
