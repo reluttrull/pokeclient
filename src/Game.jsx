@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Card from './Card.jsx';
 import PrizeCard from './PrizeCard.jsx';
+import Loading from './Loading.jsx';
 import './App.css';
 import baseset from './data/baseset.json';
 
@@ -143,41 +144,45 @@ const Game = ({gameStateCallback}) => {
 
   return (
     <>
-    <div style={{position: 'absolute', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
-    <div style={{position: 'absolute', top: '90px', left: '700px', width: '200px'}}># cards in hand = {hand && hand.length}</div>
-    <div style={{position: 'absolute', top: '160px', left: '700px', width: '200px'}}># cards in bench = {bench && bench.length}</div>
-    <button onClick={drawTopCard} id="draw-card-button">draw</button>
-    <button onClick={endGame} id="end-game-button">end game</button>
-    <div id="user-active" className="card-target">
-      {active && <Card key={active.numberInDeck} data={active} startOffset={0} positionCallback={cardCallback} />}
-    </div>
-    <div id="user-bench-1" className="card-target">
-      {bench.length > 0 && <Card key={bench[0].numberInDeck} data={bench[0]} startOffset={0} positionCallback={cardCallback} />}
-    </div>
-    <div id="user-bench-2" className="card-target">
-      {bench.length > 1 && <Card key={bench[1].numberInDeck} data={bench[1]} startOffset={0} positionCallback={cardCallback} />}
-    </div>
-    <div id="user-bench-3" className="card-target">
-      {bench.length > 2 && <Card key={bench[2].numberInDeck} data={bench[2]} startOffset={0} positionCallback={cardCallback} />}
-    </div>
-    <div id="user-bench-4" className="card-target">
-      {bench.length > 3 && <Card key={bench[3].numberInDeck} data={bench[3]} startOffset={0} positionCallback={cardCallback} />}
-    </div>
-    <div id="user-bench-5" className="card-target">
-      {bench.length > 4 && <Card key={bench[4].numberInDeck} data={bench[4]} startOffset={0} positionCallback={cardCallback} />}
-    </div>
-    <div id="discard-area" className="card-target">
-      {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />}
-    </div>
-    {hand.map((card, index) => (
-          <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
-        ))}
-    <PrizeCard prizeNum={0} />
-    <PrizeCard prizeNum={3} />
-    <PrizeCard prizeNum={1} />
-    <PrizeCard prizeNum={4} />
-    <PrizeCard prizeNum={2} />
-    <PrizeCard prizeNum={5} />
+    {!gameGuid.current && <Loading />}
+    {gameGuid.current &&
+    <div>
+      <div style={{position: 'absolute', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
+      <div style={{position: 'absolute', top: '90px', left: '700px', width: '200px'}}># cards in hand = {hand && hand.length}</div>
+      <div style={{position: 'absolute', top: '160px', left: '700px', width: '200px'}}># cards in bench = {bench && bench.length}</div>
+      <button onClick={drawTopCard} id="draw-card-button">draw</button>
+      <button onClick={endGame} id="end-game-button">end game</button>
+      <div id="user-active" className="card-target">
+        {active && <Card key={active.numberInDeck} data={active} startOffset={0} positionCallback={cardCallback} />}
+      </div>
+      <div id="user-bench-1" className="card-target">
+        {bench.length > 0 && <Card key={bench[0].numberInDeck} data={bench[0]} startOffset={0} positionCallback={cardCallback} />}
+      </div>
+      <div id="user-bench-2" className="card-target">
+        {bench.length > 1 && <Card key={bench[1].numberInDeck} data={bench[1]} startOffset={0} positionCallback={cardCallback} />}
+      </div>
+      <div id="user-bench-3" className="card-target">
+        {bench.length > 2 && <Card key={bench[2].numberInDeck} data={bench[2]} startOffset={0} positionCallback={cardCallback} />}
+      </div>
+      <div id="user-bench-4" className="card-target">
+        {bench.length > 3 && <Card key={bench[3].numberInDeck} data={bench[3]} startOffset={0} positionCallback={cardCallback} />}
+      </div>
+      <div id="user-bench-5" className="card-target">
+        {bench.length > 4 && <Card key={bench[4].numberInDeck} data={bench[4]} startOffset={0} positionCallback={cardCallback} />}
+      </div>
+      <div id="discard-area" className="card-target">
+        {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />}
+      </div>
+      {hand.map((card, index) => (
+            <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
+          ))}
+      <PrizeCard prizeNum={0} />
+      <PrizeCard prizeNum={3} />
+      <PrizeCard prizeNum={1} />
+      <PrizeCard prizeNum={4} />
+      <PrizeCard prizeNum={2} />
+      <PrizeCard prizeNum={5} />
+    </div>}
     </>
   );
 };
