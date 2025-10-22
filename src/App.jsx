@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CoinFlip from './CoinFlip.jsx';
 import Game from './Game.jsx';
 import './App.css';
 import baseset from './data/baseset.json';
@@ -12,7 +13,7 @@ const App = () => {
     getCoinFlip();
     setTimeout(() => {
       setGameStarted(true);
-    }, 3000);
+    }, 5000);
   }
 
   function getCoinFlip() {
@@ -34,7 +35,7 @@ const App = () => {
   return (
     <>
       {!gameStarted && <button onClick={startGame}>Start game</button>}
-      {coinResult != null && !gameStarted && <div>{coinResult ? 'heads' : 'tails'}</div>}
+      {coinResult != null && !gameStarted && <CoinFlip isHeads={coinResult} />}
       {gameStarted && !gameEnded && <Game gameStateCallback={gameStateCallback} />}
       {gameEnded && <h1>Game over</h1>}
     </>
