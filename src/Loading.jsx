@@ -4,7 +4,7 @@ import './App.css';
 
 const Loading = () => {
   const [obj, setObj] = useValue({ x: 0, y: 0, width: 100, height: 100 });
-  const energyImages = ['/Fighting.png', '/Lightning.png'];
+  const energyImages = ['/Fighting.png', '/Lightning.png', '/Colorless.png'];
 
   let index = Math.floor(Math.random() * energyImages.length);
   let url = energyImages[index];

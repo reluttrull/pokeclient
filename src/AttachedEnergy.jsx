@@ -5,7 +5,7 @@ import './App.css';
 const AttachedEnergy = ({cardName, offset}) => {
   console.log(cardName);
   const [left, setLeft] = useValue(offset + 20);
-  let energyType = cardName.split(" ")[0];
+  let energyType = cardName.replace(" Energy", "");
 
   let urlstring = `/${energyType}.png`;
 
