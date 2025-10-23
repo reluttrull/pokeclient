@@ -85,7 +85,7 @@ const Card = ({data, startOffset, positionCallback}) => {
     >
       <FaCircleInfo className="info-block" onClick={openModal} />
       {data.attachedCards.filter((attachedCard) => attachedCard.category == "Energy") // only energy cards
-          .toSorted((a,b) => a.cardName - b.cardName) // TODO: group them together
+          .toSorted((a,b) => a.name - b.name) // TODO: make sure they group together
           .map((card, index) => (
         <AttachedEnergy key={card.numberInDeck} cardName={card.name} offset={index * 20} />
       ))}

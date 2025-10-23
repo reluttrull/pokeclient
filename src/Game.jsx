@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Card from './Card.jsx';
 import PrizeCard from './PrizeCard.jsx';
 import Loading from './Loading.jsx';
+import ConfirmationDialog from './ConfirmationDialog.jsx';
 import './App.css';
 import baseset from './data/baseset.json';
 
@@ -12,6 +13,7 @@ const Game = ({gameStateCallback}) => {
   const [active, setActive] = useState(null);
   const [bench, setBench] = useState([]);
   const [discard, setDiscard] = useState([]);
+  const [prizes, setPrizes] = useState([0,3,1,4,2,5]);
   
   const cardCallback = (data) => {
     // update where card is placed
@@ -74,6 +76,20 @@ const Game = ({gameStateCallback}) => {
     return baseset[rand];
   }
 
+  function drawPrize(prizeNum) {
+    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/drawcardfromprizes/${gameGuid.current}`)
+    .then(response => response.json())
+    .then(data => {
+      data.prizeCard.attachedCards = [];
+      setHand([...hand, data.prizeCard]);
+      setPrizes((prizes) => prizes.filter((p) => p != prizeNum));
+      if (data.remainingPrizes == 0) {
+          gameStateCallback({ ended: true });
+      } 
+    })
+    .catch(error => console.error('Error fetching prize card data:', error));
+  }
+
   function drawTopCard() {
     fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/drawcardfromdeck/${gameGuid.current}`)
     .then(response => response.json())
@@ -82,7 +98,7 @@ const Game = ({gameStateCallback}) => {
       console.log('draw card', data);
       setHand([...hand, data]);
     })
-    .catch(error => console.error('Error fetching data:', error));
+    .catch(error => console.error('Error fetching card data:', error));
   }
 
   function discardCard(card) {
@@ -137,7 +153,7 @@ const Game = ({gameStateCallback}) => {
         }
         if (data.mulligans) mulligans.current = data.mulligans;
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => console.error('Error fetching game start data:', error));
     }
     }, []);
 
@@ -176,12 +192,9 @@ const Game = ({gameStateCallback}) => {
       {hand.map((card, index) => (
             <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
           ))}
-      <PrizeCard prizeNum={0} />
-      <PrizeCard prizeNum={3} />
-      <PrizeCard prizeNum={1} />
-      <PrizeCard prizeNum={4} />
-      <PrizeCard prizeNum={2} />
-      <PrizeCard prizeNum={5} />
+      {prizes.map((prizeNum) =>
+        <button key={prizeNum} onClick={() => drawPrize(prizeNum)}><PrizeCard prizeNum={prizeNum} /></button>
+      )}
     </div>}
     </>
   );
