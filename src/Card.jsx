@@ -5,7 +5,8 @@ import Modal from 'react-modal';
 import AttachedEnergy from './AttachedEnergy.jsx';
 import './App.css';
 
-const Card = ({data, startOffset, positionCallback}) => {
+const Card = ({data, startOffset, snapPosition, positionCallback}) => {
+  console.log(startOffset, snapPosition);
   const ref = useRef(null);
   const uuid = crypto.randomUUID();
   const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -47,7 +48,16 @@ const Card = ({data, startOffset, positionCallback}) => {
           && cardCenterY >= target.top - 70 && cardCenterY <= target.top + 70) {
         setTranslateX(down ? movement.x : withSpring(target.left + 2));
         setTranslateY(down ? movement.y : withSpring(target.top)); 
-        if (!down) positionCallback({ num: data.numberInDeck, pos: target.position});
+        if (!down) {
+          positionCallback({ num: data.numberInDeck, pos: target.position});
+          if (snapPosition >= 0) {
+            setTranslateX(withSpring(target.left + 2));
+            setTranslateY(withSpring(target.top)); 
+          } else {
+            setTranslateX(withSpring(startOffset));
+            setTranslateY(withSpring(0));
+          }
+        }
         return;
       }
     }

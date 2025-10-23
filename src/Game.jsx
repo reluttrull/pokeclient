@@ -29,6 +29,10 @@ const Game = ({gameStateCallback}) => {
         if (active) { // this spot occupied, attach card instead
           active.attachedCards.push(card);
         } else { // spot empty, place card in spot
+          if (card.category != "Pokemon") {
+            //setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck).concat(card)) // send home
+            return;
+          }
           setActive(card);
         }
         if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck));
@@ -42,6 +46,10 @@ const Game = ({gameStateCallback}) => {
         if (bench.length > spot && bench[spot]) { // this spot occupied, attach card instead
           bench[spot].attachedCards.push(card);
         } else { // spot empty, place card in spot
+          if (card.category != "Pokemon") {
+            //setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck).concat(card)) // send home
+            return;
+          }
           const nextBench = [
             ...bench.slice(0, spot-1),
             card,
@@ -169,32 +177,33 @@ const Game = ({gameStateCallback}) => {
       <button onClick={drawTopCard} id="draw-card-button">draw</button>
       <button onClick={endGame} id="end-game-button">end game</button>
       <div id="user-active" className="card-target">
-        {active && <Card key={active.numberInDeck} data={active} startOffset={0} positionCallback={cardCallback} />}
+        {active && <Card key={active.numberInDeck} data={active} startOffset={0} snapPosition={0} positionCallback={cardCallback} />}
       </div>
       <div id="user-bench-1" className="card-target">
-        {bench.length > 0 && <Card key={bench[0].numberInDeck} data={bench[0]} startOffset={0} positionCallback={cardCallback} />}
+        {bench.length > 0 && <Card key={bench[0].numberInDeck} data={bench[0]} startOffset={0} snapPosition={1} positionCallback={cardCallback} />}
       </div>
       <div id="user-bench-2" className="card-target">
-        {bench.length > 1 && <Card key={bench[1].numberInDeck} data={bench[1]} startOffset={0} positionCallback={cardCallback} />}
+        {bench.length > 1 && <Card key={bench[1].numberInDeck} data={bench[1]} startOffset={0} snapPosition={2} positionCallback={cardCallback} />}
       </div>
       <div id="user-bench-3" className="card-target">
-        {bench.length > 2 && <Card key={bench[2].numberInDeck} data={bench[2]} startOffset={0} positionCallback={cardCallback} />}
+        {bench.length > 2 && <Card key={bench[2].numberInDeck} data={bench[2]} startOffset={0} snapPosition={3} positionCallback={cardCallback} />}
       </div>
       <div id="user-bench-4" className="card-target">
-        {bench.length > 3 && <Card key={bench[3].numberInDeck} data={bench[3]} startOffset={0} positionCallback={cardCallback} />}
+        {bench.length > 3 && <Card key={bench[3].numberInDeck} data={bench[3]} startOffset={0} snapPosition={4} positionCallback={cardCallback} />}
       </div>
       <div id="user-bench-5" className="card-target">
-        {bench.length > 4 && <Card key={bench[4].numberInDeck} data={bench[4]} startOffset={0} positionCallback={cardCallback} />}
+        {bench.length > 4 && <Card key={bench[4].numberInDeck} data={bench[4]} startOffset={0} snapPosition={5} positionCallback={cardCallback} />}
       </div>
       <div id="discard-area" className="card-target">
-        {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />}
+        {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} snapPosition={6} positionCallback={cardCallback} />}
       </div>
-      {hand.map((card, index) => (
-            <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
-          ))}
       {prizes.map((prizeNum) =>
-        <button key={prizeNum} onClick={() => drawPrize(prizeNum)}><PrizeCard prizeNum={prizeNum} /></button>
+          <a href="#" key={prizeNum} onClick={() => drawPrize(prizeNum)} ><PrizeCard prizeNum={prizeNum} /></a>
       )}
+      {hand.map((card, index) => (
+          <Card key={card.numberInDeck} data={card} startOffset={index * 20} snapPosition={-1} positionCallback={cardCallback} 
+          style={{top: '0px', left: '0px', transform: 'translateX(0px) translateY(0px' }} />
+        ))}
     </div>}
     </>
   );
