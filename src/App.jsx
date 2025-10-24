@@ -12,6 +12,7 @@ const App = () => {
   function startGame() {
     getCoinFlip();
     setTimeout(() => {
+      setCoinResult(null);
       setGameStarted(true);
     }, 5000);
   }

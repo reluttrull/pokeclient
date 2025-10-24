@@ -14,6 +14,7 @@ const Card = ({data, startOffset, positionCallback}) => {
 
   let urlstring = `url('${data.image}/low.webp')`;
   let hqurlstring = `${data.image}/high.webp`;
+  Modal.setAppElement('#root');
   const [backgroundImage, setBackgroundImage] = useValue(urlstring);
   const targets = [
     { left: 550, top: 165, position: 0 }, // active

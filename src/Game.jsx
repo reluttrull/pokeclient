@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Modal from 'react-modal';
 import Card from './Card.jsx';
 import PrizeCard from './PrizeCard.jsx';
+import CoinFlip from './CoinFlip.jsx';
 import Loading from './Loading.jsx';
 import ConfirmationDialog from './ConfirmationDialog.jsx';
 import './App.css';
@@ -14,6 +16,8 @@ const Game = ({gameStateCallback}) => {
   const [bench, setBench] = useState([]);
   const [discard, setDiscard] = useState([]);
   const [prizes, setPrizes] = useState([0,3,1,4,2,5]);
+  const [coinResult, setCoinResult] = useState(null);
+  Modal.setAppElement('#root');
   
   const cardCallback = (data) => {
     // update where card is placed
@@ -141,6 +145,20 @@ const Game = ({gameStateCallback}) => {
       .catch(error => console.error('Error ending game:', error));
   }
 
+  function getCoinFlip() {
+    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/flipcoin`)
+    .then(response => response.json())
+    .then(data => {
+      console.log('flipped coin', data);
+      setCoinResult(data);
+    })
+    .catch(error => console.error('Error fetching data:', error));
+  }
+
+  function closeCoinFlip() {
+    setCoinResult(null);
+  }
+
   // on page load
   useEffect(() => {
     if (!gameGuid.current) {
@@ -170,8 +188,9 @@ const Game = ({gameStateCallback}) => {
     {gameGuid.current &&
     <div>
       <div style={{position: 'absolute', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
-      <div style={{position: 'absolute', top: '90px', left: '700px', width: '200px'}}># cards in hand = {hand && hand.length}</div>
-      <div style={{position: 'absolute', top: '160px', left: '700px', width: '200px'}}># cards in bench = {bench && bench.length}</div>
+      <div style={{position: 'absolute', top: '50px', left: '700px', width: '200px'}}># cards in hand = {hand && hand.length}</div>
+      <div style={{position: 'absolute', top: '100px', left: '700px', width: '200px'}}># cards in bench = {bench && bench.length}</div>
+      <button onClick={getCoinFlip} id="flip-coin-button">flip coin</button>
       <button onClick={drawTopCard} id="draw-card-button">draw</button>
       <button onClick={endGame} id="end-game-button">end game</button>
       <div id="user-active" className="card-target">
@@ -202,6 +221,13 @@ const Game = ({gameStateCallback}) => {
           <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
         ))}
     </div>}
+        {coinResult != null && <Modal className="coin-flip-container"
+            isOpen={getCoinFlip}
+            onRequestClose={closeCoinFlip}
+            contentLabel="Coin Flip"
+            onClick={closeCoinFlip}
+          ><CoinFlip isHeads={coinResult} />
+        </Modal>}
     </>
   );
 };
