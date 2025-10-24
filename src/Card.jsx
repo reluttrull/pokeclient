@@ -3,6 +3,7 @@ import { animate, useDrag, useValue, withSpring } from 'react-ui-animate';
 import { FaCircleInfo } from 'react-icons/fa6';
 import Modal from 'react-modal';
 import AttachedEnergy from './AttachedEnergy.jsx';
+import Damage from './Damage.jsx';
 import './App.css';
 
 const Card = ({data, startOffset, positionCallback}) => {
@@ -61,6 +62,10 @@ const Card = ({data, startOffset, positionCallback}) => {
     setTranslateY(down ? movement.y : withSpring(0));
   });
 
+  function handleDamageChange(change) {
+    data.damageCounters += change;
+  }
+
   return (
     <>
     <animate.div
@@ -94,6 +99,7 @@ const Card = ({data, startOffset, positionCallback}) => {
           .map((card, index) => (
         <AttachedEnergy key={card.numberInDeck} cardName={card.name} offset={index * 20} />
       ))}
+      {data.category == "Pokemon" && <Damage damageCounters={data.damageCounters} damageCallback={handleDamageChange} />}
     </animate.div>
     <Modal className="card-overlay-container"
         isOpen={modalIsOpen}

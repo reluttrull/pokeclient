@@ -91,6 +91,7 @@ const Game = ({gameStateCallback}) => {
     .then(response => response.json())
     .then(data => {
       data.prizeCard.attachedCards = [];
+      data.prizeCard.damageCounters = 0;
       setHand([...hand, data.prizeCard]);
       setPrizes((prizes) => prizes.filter((p) => p != prizeNum));
       if (data.remainingPrizes == 0) {
@@ -105,6 +106,7 @@ const Game = ({gameStateCallback}) => {
     .then(response => response.json())
     .then(data => {
       data.attachedCards = [];
+      data.damageCounters = 0;
       console.log('draw card', data);
       setHand([...hand, data]);
     })
@@ -171,7 +173,8 @@ const Game = ({gameStateCallback}) => {
         if (data.hand) {
           let expandedHand = data.hand.map(card => ({
               ...card,
-              attachedCards: []
+              attachedCards: [],
+              damageCounters: 0
           }));
           setHand(expandedHand);
         }
