@@ -18,6 +18,7 @@ const Card = ({data, startOffset, positionCallback}) => {
   Modal.setAppElement('#root');
   const [backgroundImage, setBackgroundImage] = useValue(urlstring);
   const targets = [
+    { left: 180, top: 100, position: -1}, // hand
     { left: 550, top: 165, position: 0 }, // active
     { left: 250, top: 465, position: 1 }, // bench 1
     { left: 400, top: 465, position: 2 }, // bench 2
@@ -94,7 +95,8 @@ const Card = ({data, startOffset, positionCallback}) => {
       }}
     >
       <FaCircleInfo className="info-block" onClick={openModal} />
-      {data.attachedCards.filter((attachedCard) => attachedCard.category == "Energy") // only energy cards
+      {data.attachedCards.length > 0 && 
+          data.attachedCards.filter((attachedCard) => attachedCard.category == "Energy") // only energy cards
           .toSorted((a,b) => a.name - b.name) // TODO: make sure they group together
           .map((card, index) => (
         <AttachedEnergy key={card.numberInDeck} cardName={card.name} offset={index * 20} />
