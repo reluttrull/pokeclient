@@ -41,7 +41,7 @@ const Game = ({gameStateCallback}) => {
         break;
       case 0: // moving to active
         if (active) { // this spot occupied, attach card instead
-          active.attachedCards.push(card);
+          attachCard(card, true);
         } else { // spot empty, place card in spot
           if (card.category != "Pokemon") {
             // send home
@@ -59,10 +59,11 @@ const Game = ({gameStateCallback}) => {
       case 5:
         spot--; // 0-index
         if (bench.length > spot && bench[spot]) { // this spot occupied, attach card instead
-          bench[spot].attachedCards.push(card);
+          let isAttached = attachCard(card, false, spot);
+          if (!isAttached) return; // not valid, send back
         } else { // spot empty, place card in spot
           if (card.category != "Pokemon") {
-            return; // send home
+            return; // send back
           }
           setBench([...bench, card]); // always place at the end
         }
@@ -86,6 +87,40 @@ const Game = ({gameStateCallback}) => {
       default:
         break;
     }
+  }
+
+  function attachCard(cardToAttach, isActive, benchPosition = -1) {
+    // attach to active
+    console.log(cardToAttach);
+    if (isActive) {
+      if (cardToAttach.category == "Energy") {
+        active.attachedCards.push(cardToAttach);
+      } else if (cardToAttach.evolveFrom && cardToAttach.evolveFrom == active.name) {
+        let attached = active.attachedCards;
+        active.attachedCards = [];
+        cardToAttach.attachedCards = [...attached, active];
+        cardToAttach.damageCounters = active.damageCounters;
+        setActive(cardToAttach);
+      } else return false; // not a valid card to attach, send back
+      return true;
+    }
+    // attach to bench
+    if (cardToAttach.category == "Energy") {
+      bench[benchPosition].attachedCards.push(cardToAttach);
+    } else if (cardToAttach.evolveFrom && cardToAttach.evolveFrom == bench[benchPosition].name) {
+      // move energies and prior evolutions to attached cards of new top card
+      let attached = bench[benchPosition].attachedCards;
+      bench[benchPosition].attachedCards = [];
+      cardToAttach.attachedCards = [...attached, bench[benchPosition]];
+      cardToAttach.damageCounters = bench[benchPosition].damageCounters;
+      // replace the prior evolution card on the bench without mutating the array
+      let newBench = bench.map((card, index) => {
+        if (index == benchPosition) return cardToAttach;
+        else return card;
+      });
+      setBench(newBench);
+    } else return false; // not a valid card to attach, send back
+    return true;
   }
 
   function getRandomCard() {
@@ -171,7 +206,7 @@ const Game = ({gameStateCallback}) => {
   // on page load
   useEffect(() => {
     if (!gameGuid.current) {
-        fetch('https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getnewgame/0')
+        fetch('https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getnewgame/1')
         .then(response => response.json())
         .then(data => {
             console.log('set game start');
