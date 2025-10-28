@@ -18,14 +18,14 @@ const Card = ({data, startOffset, positionCallback}) => {
   Modal.setAppElement('#root');
   const [backgroundImage, setBackgroundImage] = useValue(urlstring);
   const targets = [
-    { left: 480, top: 620, position: -1}, // hand
-    { left: 580, top: 620, position: -1}, // extend hand area right
-    { left: 550, top: 165, position: 0 }, // active
-    { left: 250, top: 465, position: 1 }, // bench 1
-    { left: 400, top: 465, position: 2 }, // bench 2
-    { left: 550, top: 465, position: 3 }, // bench 3
-    { left: 700, top: 465, position: 4 }, // bench 4
-    { left: 850, top: 465, position: 5 }, // bench 5
+    { left: 480, top: 470, position: -1}, // hand
+    { left: 580, top: 470, position: -1}, // extend hand area right
+    { left: 600, top: 115, position: 0 }, // active
+    { left: 300, top: 315, position: 1 }, // bench 1
+    { left: 450, top: 315, position: 2 }, // bench 2
+    { left: 600, top: 315, position: 3 }, // bench 3
+    { left: 750, top: 315, position: 4 }, // bench 4
+    { left: 900, top: 315, position: 5 }, // bench 5
     { left: 1100, top: 485, position: 6 }, // discard
   ];
   

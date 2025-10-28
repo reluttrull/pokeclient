@@ -53,38 +53,38 @@
 }
 
 #user-active {
-  top: 100px;
-  left: 500px;
+  top: 50px;
+  left: 550px;
   background-color: rgba(200, 10, 10, 0.5);
 }
 
 #user-bench-1 {
-  top: 400px;
-  left: 200px;
+  top: 250px;
+  left: 250px;
   background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-2 {
-  top: 400px;
-  left: 350px;
+  top: 250px;
+  left: 400px;
   background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-3 {
-  top: 400px;
-  left: 500px;
+  top: 250px;
+  left: 550px;
   background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-4 {
-  top: 400px;
-  left: 650px;
+  top: 250px;
+  left: 700px;
   background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-5 {
-  top: 400px;
-  left: 800px;
+  top: 250px;
+  left: 850px;
   background-color: rgba(170, 220, 230, 0.5);
 }
 
@@ -104,7 +104,7 @@
 
 #hand-area {
   position:absolute;
-  top: 600px;
+  top: 450px;
   left: 420px;
   width: 200px;
   height: 140px;
@@ -113,24 +113,24 @@
 
 #draw-card-button {
   position: absolute;
-  top: 180px; 
-  left: 700px;
+  top: 50px; 
+  left: 1000px;
   width: 120px;
   background-color: rgba(20, 20, 20, 0.7);
 }
 
 #flip-coin-button {
   position: absolute;
-  top: 240px;
-  left: 700px;
+  top: 100px;
+  left: 1000px;
   width: 120px;
   background-color: rgba(20, 20, 20, 0.7);
 }
 
 #end-game-button {
   position: absolute;
-  top: 300px; 
-  left: 700px;
+  top: 150px; 
+  left: 1000px;
   width: 120px;
   background-color: rgba(200, 10, 10, 0.7);
 }

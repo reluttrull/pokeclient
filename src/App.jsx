@@ -5,6 +5,7 @@ import './App.css';
 import baseset from './data/baseset.json';
 
 const App = () => {
+  const [deckNum, setDeckNum] = useState("0");
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [coinResult, setCoinResult] = useState(null);
@@ -33,11 +34,24 @@ const App = () => {
     }
   }
 
+  function handleDeckNumChange(event) {
+    setDeckNum(event.target.value);
+  }
+
   return (
     <>
-      {!gameStarted && <button onClick={startGame}>Start game</button>}
+      {!gameStarted && 
+        <div>
+          <input type="radio" id="haymaker" value="0" checked={deckNum == "0"} onChange={handleDeckNumChange} />
+          <label for="haymaker">Haymaker</label>
+          <input type="radio" id="raindance" value="1" checked={deckNum == "1"} onChange={handleDeckNumChange} />
+          <label for="raindance">Rain Dance</label>
+          <br />
+          <br />
+          <button onClick={startGame}>Start game</button>
+        </div>}
       {coinResult != null && !gameStarted && <CoinFlip isHeads={coinResult} />}
-      {gameStarted && !gameEnded && <Game gameStateCallback={gameStateCallback} />}
+      {gameStarted && !gameEnded && <Game deckNumber={deckNum} gameStateCallback={gameStateCallback} />}
       {gameEnded && <h1>Game over</h1>}
     </>
   );

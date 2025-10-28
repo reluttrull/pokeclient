@@ -8,7 +8,7 @@ import ConfirmationDialog from './ConfirmationDialog.jsx';
 import './App.css';
 import baseset from './data/baseset.json';
 
-const Game = ({gameStateCallback}) => {
+const Game = ({deckNumber, gameStateCallback}) => {
   const gameGuid = useRef(null);
   const mulligans = useRef(0);
   const [hand, setHand] = useState([]);
@@ -207,7 +207,7 @@ const Game = ({gameStateCallback}) => {
   // on page load
   useEffect(() => {
     if (!gameGuid.current) {
-        fetch('https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getnewgame/1')
+        fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getnewgame/${deckNumber}`)
         .then(response => response.json())
         .then(data => {
             console.log('set game start');
@@ -233,9 +233,9 @@ const Game = ({gameStateCallback}) => {
     {!gameGuid.current && <Loading />}
     {gameGuid.current &&
     <div>
-      <div style={{position: 'absolute', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
-      <div style={{position: 'absolute', top: '50px', left: '700px', width: '200px'}}># cards in hand = {hand && hand.length}</div>
-      <div style={{position: 'absolute', top: '100px', left: '700px', width: '200px'}}># cards in bench = {bench && bench.length}</div>
+      <div style={{position: 'absolute', top: '50px', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
+      <div style={{position: 'absolute', top: '100px', left: '700px', width: '200px'}}># cards in hand = {hand && hand.length}</div>
+      <div style={{position: 'absolute', top: '150px', left: '700px', width: '200px'}}># cards in bench = {bench && bench.length}</div>
       <button onClick={getCoinFlip} id="flip-coin-button">flip coin</button>
       <button onClick={drawTopCard} id="draw-card-button">draw</button>
       <button onClick={endGame} id="end-game-button">end game</button>
