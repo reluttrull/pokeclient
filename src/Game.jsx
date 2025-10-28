@@ -30,7 +30,16 @@ const Game = ({gameStateCallback}) => {
 
   function placeCardInSpot(card, spot) {
     switch (spot) {
-      case 0:
+      case -1: // moving to hand
+        if (hand.includes(card)) break; // card already belongs to hand and will snap back on its own
+        let attached = card.attachedCards;
+        card.attachedCards = [];
+        card.damageCounters = 0;
+        setHand([...hand, ...attached, card]); // return card and all attached to it to hand
+        if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck != card.numberInDeck));
+        else if (active && active.numberInDeck == card.numberInDeck) setActive(null); 
+        break;
+      case 0: // moving to active
         if (active) { // this spot occupied, attach card instead
           active.attachedCards.push(card);
         } else { // spot empty, place card in spot
@@ -40,30 +49,28 @@ const Game = ({gameStateCallback}) => {
           }
           setActive(card);
         }
-        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck));
-        else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck !== card.numberInDeck));
+        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck != card.numberInDeck));
+        else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck != card.numberInDeck));
         break;
-      case 1:
+      case 1: // moving to bench
       case 2:
       case 3:
       case 4:
       case 5:
-        spot--;
+        spot--; // 0-index
         if (bench.length > spot && bench[spot]) { // this spot occupied, attach card instead
           bench[spot].attachedCards.push(card);
         } else { // spot empty, place card in spot
           if (card.category != "Pokemon") {
-            // send home
-            return;
+            return; // send home
           }
           setBench([...bench, card]); // always place at the end
         }
-        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck));
+        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck != card.numberInDeck));
         else if (active && active.numberInDeck == card.numberInDeck) setActive(null); 
         else if (bench.includes(card)) setBench([...new Set(bench)]);
         break;
-      case 6:
-        console.log('moving to discard');
+      case 6: // moving to discard
         // discard any attached cards first
         card.attachedCards.forEach(function(c) {
           setDiscard([c, ...discard]);
@@ -71,8 +78,8 @@ const Game = ({gameStateCallback}) => {
         });
         // then discard main card
         setDiscard([card, ...discard]);
-        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck !== card.numberInDeck));
-        else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck !== card.numberInDeck));
+        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck != card.numberInDeck));
+        else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck != card.numberInDeck));
         else if (active.numberInDeck == card.numberInDeck) setActive(null); 
         discardCard(card);
         break;
