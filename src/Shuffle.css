@@ -1,0 +1,82 @@
+@keyframes shuffle {
+  0% {
+    transform: rotate(0) translateX(0) scale(1);
+  }
+  50% {
+    transform: rotate(5deg) translateX(105%) scale(0.96);
+  }
+  100% {
+    transform: rotate(0) translateX(0);
+  }
+}
+
+.card-list {
+  position: absolute;
+}
+
+.card-list__item {
+  position: absolute;
+  animation: none;
+  animation-fill-mode: forwards;
+
+  &[data-card="0"] {
+    z-index: 6;
+
+    margin-top: 0;
+  }
+
+  &[data-card="1"] {
+    z-index: 5;
+
+    margin-top: 4px;
+  }
+
+  &[data-card="2"] {
+    z-index: 4;
+
+    margin-top: 8px;
+  }
+
+  .is-animated & {
+
+    &[data-card="0"] {
+      animation: shuffle 1s ease-in-out 0s 1 normal;
+      z-index: 2;
+
+      transition: z-index 0s ease-in-out 0.5s;
+    }
+
+    &[data-card="1"] {
+      animation: shuffle 1s ease-in-out 1s 1 normal; 
+      z-index: 1;
+
+      transition: z-index 0s ease-in-out 1.5s;
+    }
+
+    &[data-card="2"] {
+      animation: shuffle 1s ease-in-out 2s 1 normal;
+      z-index: 0;
+
+      transition: z-index 0s ease-in-out 2.5s;
+    }
+  }
+}
+
+.button {
+  position: absolute;
+  top: 80px;
+  left: 110px;
+  
+  background-color: rgba(200, 10, 10, 0.7);
+  color: #fff;
+  
+  z-index: 0;
+  
+  appearance: none;
+  cursor: pointer;
+  
+  &:disabled {
+    background: #777;
+    cursor: not-allowed;
+  }
+}

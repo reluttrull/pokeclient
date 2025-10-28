@@ -41,6 +41,11 @@
   z-index: 1;
 }
 
+.card-size {
+  width: 95px;
+  height: 140px;
+}
+
 .read-the-docs {
   color: #888;
 }

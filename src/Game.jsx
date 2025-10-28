@@ -4,6 +4,7 @@ import Card from './Card.jsx';
 import PrizeCard from './PrizeCard.jsx';
 import CoinFlip from './CoinFlip.jsx';
 import Loading from './Loading.jsx';
+import Deck from './Deck.jsx';
 import ConfirmationDialog from './ConfirmationDialog.jsx';
 import './App.css';
 import baseset from './data/baseset.json';
@@ -204,6 +205,23 @@ const Game = ({deckNumber, gameStateCallback}) => {
     setCoinResult(null);
   }
 
+  function handleShuffle() {
+    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/shuffledeck/${gameGuid.current}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        if (response.status == 204) {
+          console.log('deck shuffled successfully');
+        }
+        else console.log(response);
+      })
+      .catch(error => console.error('Error shuffling deck:', error));
+  }
+
   // on page load
   useEffect(() => {
     if (!gameGuid.current) {
@@ -260,7 +278,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
       <div id="discard-area" className="card-target">
         {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />}
       </div>
-      <img src="cardback.png" id="deck" />
+      <Deck shuffleCallback={handleShuffle} />
       {prizes.map((prizeNum) =>
           <a href="#" key={prizeNum} onClick={() => drawPrize(prizeNum)} ><PrizeCard prizeNum={prizeNum} /></a>
       )}

@@ -43,9 +43,9 @@ const App = () => {
       {!gameStarted && 
         <div>
           <input type="radio" id="haymaker" value="0" checked={deckNum == "0"} onChange={handleDeckNumChange} />
-          <label for="haymaker">Haymaker</label>
+          <label htmlFor="haymaker">Haymaker</label>
           <input type="radio" id="raindance" value="1" checked={deckNum == "1"} onChange={handleDeckNumChange} />
-          <label for="raindance">Rain Dance</label>
+          <label htmlFor="raindance">Rain Dance</label>
           <br />
           <br />
           <button onClick={startGame}>Start game</button>
