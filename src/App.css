@@ -94,6 +94,14 @@
   background-color: rgba(120, 120, 120, 0.5);
 }
 
+#deck {
+  position:absolute;
+  top: 240px;
+  left: 1050px;
+  width: 100px;
+  height: 140px;
+}
+
 #hand-area {
   position:absolute;
   top: 600px;

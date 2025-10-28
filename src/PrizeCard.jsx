@@ -3,7 +3,7 @@ import './App.css';
 
 const PrizeCard = ({prizeNum}) => {
   const ref = useRef(null);
-  const regionX = 1000;
+  const regionX = 10;
   const regionY = 10;
   const offsetX = (prizeNum % 2) * 95 + regionX;
   const offsetY = (prizeNum % 3) * 100 + regionY;

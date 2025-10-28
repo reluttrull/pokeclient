@@ -31,7 +31,7 @@ const Game = ({gameStateCallback}) => {
     switch (spot) {
       case -1: // moving to hand
         if (hand.includes(card)) break; // card already belongs to hand and will snap back on its own
-        let attached = card.attachedCards;
+        let attached = card.attachedCards.map(card => ({ ...card, damageCounters: 0 }));
         card.attachedCards = [];
         card.damageCounters = 0;
         setHand([...hand, ...attached, card]); // return card and all attached to it to hand
@@ -260,6 +260,7 @@ const Game = ({gameStateCallback}) => {
       <div id="discard-area" className="card-target">
         {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />}
       </div>
+      <img src="cardback.png" id="deck" />
       {prizes.map((prizeNum) =>
           <a href="#" key={prizeNum} onClick={() => drawPrize(prizeNum)} ><PrizeCard prizeNum={prizeNum} /></a>
       )}
