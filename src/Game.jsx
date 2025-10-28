@@ -25,7 +25,6 @@ const Game = ({gameStateCallback}) => {
     var card = hand.concat(bench).concat(active).concat(bench).find(c => c.numberInDeck == data.num);
     console.log(card);
     placeCardInSpot(card, data.pos);
-    console.log(bench);
   };
 
   function placeCardInSpot(card, spot) {
@@ -44,9 +43,9 @@ const Game = ({gameStateCallback}) => {
           let isAttachedSuccessful = attachCard(card, true);
           if (!isAttachedSuccessful) return; // not valid, send back
         } else { // spot empty, place card in spot
-          if (card.category != "Pokemon") {
-            // send home
-            return;
+          if (card.category != "Pokemon" || 
+            (card.stage != "Basic" && !card.attachedCards.find((card) => card.stage && card.stage == "Basic"))) {
+            return; // send back
           }
           setActive(card);
         }
@@ -63,7 +62,8 @@ const Game = ({gameStateCallback}) => {
           let isAttachedSuccessful = attachCard(card, false, spot);
           if (!isAttachedSuccessful) return; // not valid, send back
         } else { // spot empty, place card in spot
-          if (card.category != "Pokemon") {
+          if (card.category != "Pokemon" || 
+            (card.stage != "Basic" && !card.attachedCards.find((card) => card.stage && card.stage == "Basic"))) {
             return; // send back
           }
           setBench([...bench, card]); // always place at the end
@@ -263,9 +263,11 @@ const Game = ({gameStateCallback}) => {
       {prizes.map((prizeNum) =>
           <a href="#" key={prizeNum} onClick={() => drawPrize(prizeNum)} ><PrizeCard prizeNum={prizeNum} /></a>
       )}
-      {hand.map((card, index) => (
-          <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
-        ))}
+      <div id="hand-area">
+        {hand.map((card, index) => (
+            <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
+          ))}
+      </div>
     </div>}
         {coinResult != null && <Modal className="coin-flip-container"
             isOpen={getCoinFlip}

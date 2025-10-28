@@ -3,6 +3,9 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  user-select: none;
 }
 
 .logo {
@@ -89,6 +92,15 @@
   top: 420px;
   left: 1050px;
   background-color: rgba(120, 120, 120, 0.5);
+}
+
+#hand-area {
+  position:absolute;
+  top: 600px;
+  left: 420px;
+  width: 200px;
+  height: 140px;
+  background-color: rgba(58, 58, 92, 0.5);
 }
 
 #draw-card-button {
