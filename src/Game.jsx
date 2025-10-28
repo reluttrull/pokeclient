@@ -41,7 +41,8 @@ const Game = ({gameStateCallback}) => {
         break;
       case 0: // moving to active
         if (active) { // this spot occupied, attach card instead
-          attachCard(card, true);
+          let isAttachedSuccessful = attachCard(card, true);
+          if (!isAttachedSuccessful) return; // not valid, send back
         } else { // spot empty, place card in spot
           if (card.category != "Pokemon") {
             // send home
@@ -59,8 +60,8 @@ const Game = ({gameStateCallback}) => {
       case 5:
         spot--; // 0-index
         if (bench.length > spot && bench[spot]) { // this spot occupied, attach card instead
-          let isAttached = attachCard(card, false, spot);
-          if (!isAttached) return; // not valid, send back
+          let isAttachedSuccessful = attachCard(card, false, spot);
+          if (!isAttachedSuccessful) return; // not valid, send back
         } else { // spot empty, place card in spot
           if (card.category != "Pokemon") {
             return; // send back
