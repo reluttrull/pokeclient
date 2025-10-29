@@ -282,7 +282,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
       {prizes.map((prizeNum) =>
           <a href="#" key={prizeNum} onClick={() => drawPrize(prizeNum)} ><PrizeCard prizeNum={prizeNum} /></a>
       )}
-      <div id="hand-area">
+      <div id="hand-area" className="card-target">
         {hand.map((card, index) => (
             <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
           ))}

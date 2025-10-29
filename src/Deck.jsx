@@ -14,7 +14,7 @@ const Deck = ({shuffleCallback}) => {
 
   return (
     <>
-    <div className="card-wrapper" id="deck">
+    <div className="card-wrapper card-target" id="deck">
         <div className={isAnimated ? "card-list is-animated" : "card-list"}>
             <div className="card-list__item" data-card="0">
                 <img src="cardback.png" className="card-size" />
