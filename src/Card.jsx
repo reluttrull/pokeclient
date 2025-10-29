@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { animate, useDrag, useValue, withSpring } from 'react-ui-animate';
 import { FaCircleInfo } from 'react-icons/fa6';
 import Modal from 'react-modal';
@@ -12,6 +12,9 @@ const Card = ({data, startOffset, positionCallback}) => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const [translateX, setTranslateX] = useValue(startOffset);
   const [translateY, setTranslateY] = useValue(0);
+  const [attachedEnergy, setAttachedEnergy] = useState(data.attachedCards
+          .filter((attachedCard) => attachedCard.category == "Energy")
+          .toSorted((a,b) => a.name - b.name));
 
   let urlstring = `url('${data.image}/low.webp')`;
   let hqurlstring = `${data.image}/high.webp`;
@@ -53,7 +56,7 @@ const Card = ({data, startOffset, positionCallback}) => {
         setTranslateX(down ? movement.x : withSpring(target.left + 2));
         setTranslateY(down ? movement.y : withSpring(target.top)); 
         if (!down) {
-          positionCallback({ num: data.numberInDeck, pos: target.position});
+          positionCallback({ card: data, pos: target.position});
           setTranslateX(withSpring(startOffset));
           setTranslateY(withSpring(0));
         }
@@ -68,6 +71,32 @@ const Card = ({data, startOffset, positionCallback}) => {
   function handleDamageChange(change) {
     data.damageCounters += change;
   }
+
+  function handleEnergyDelete(cardName) {
+    console.log(`deleting ${cardName} from this card`);
+    let energyCard = null;
+    for (let i = data.attachedCards.length - 1; i >= 0; i--) {
+      if (data.attachedCards[i].name == cardName) {
+        energyCard = data.attachedCards[i];
+        data.attachedCards.splice(i, 1);
+        break;
+      }
+    }
+    if (energyCard) {
+      positionCallback({ card: energyCard, pos: 6}); // send to discard
+    }
+    
+    // make sure state updates
+    setAttachedEnergy(data.attachedCards
+          .filter((attachedCard) => attachedCard.category == "Energy")
+          .toSorted((a,b) => a.name - b.name));
+  }
+
+  useEffect(() => {
+    setAttachedEnergy(data.attachedCards
+          .filter((attachedCard) => attachedCard.category == "Energy")
+          .toSorted((a,b) => a.name - b.name));
+    }, [JSON.stringify(data.attachedCards)]);
 
   return (
     <>
@@ -97,11 +126,9 @@ const Card = ({data, startOffset, positionCallback}) => {
       }}
     >
       <FaCircleInfo className="info-block" onClick={openModal} />
-      {data.attachedCards.length > 0 && 
-          data.attachedCards.filter((attachedCard) => attachedCard.category == "Energy") // only energy cards
-          .toSorted((a,b) => a.name - b.name) // TODO: make sure they group together
-          .map((card, index) => (
-        <AttachedEnergy key={card.numberInDeck} cardName={card.name} offset={index * 20} />
+      {attachedEnergy.length > 0 && 
+          attachedEnergy.map((card, index) => (
+        <AttachedEnergy key={card.numberInDeck} cardName={card.name} offset={index * 20} deleteCallback={handleEnergyDelete} />
       ))}
       {data.category == "Pokemon" && <Damage damageCounters={data.damageCounters} damageCallback={handleDamageChange} />}
     </animate.div>

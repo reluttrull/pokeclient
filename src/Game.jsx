@@ -22,8 +22,8 @@ const Game = ({deckNumber, gameStateCallback}) => {
   
   const cardCallback = (data) => {
     // update where card is placed
-    console.log(`card ${data.num} moved to ${data.pos}`);
-    var card = hand.concat(bench).concat(active).concat(bench).find(c => c.numberInDeck == data.num);
+    console.log(`card ${data.card.numberInDeck} moved to ${data.pos}`);
+    var card = data.card;
     console.log(card);
     placeCardInSpot(card, data.pos);
   };
@@ -83,7 +83,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
         setDiscard([card, ...discard]);
         if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck != card.numberInDeck));
         else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck != card.numberInDeck));
-        else if (active.numberInDeck == card.numberInDeck) setActive(null); 
+        else if (active && active.numberInDeck == card.numberInDeck) setActive(null); 
         discardCard(card);
         break;
       case 7: // deck
@@ -95,6 +95,10 @@ const Game = ({deckNumber, gameStateCallback}) => {
       default:
         break;
     }
+  }
+
+  function removeCard(cardToRemove) {
+
   }
 
   function attachCard(cardToAttach, isActive, benchPosition = -1) {

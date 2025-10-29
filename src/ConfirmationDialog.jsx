@@ -1,13 +1,21 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { confirmable, createConfirmation } from 'react-confirm';
+import Modal from 'react-modal';
 
-const ConfirmationDialog = ({ show, proceed, confirmation }) => (
-<div>
-<p>{confirmation}</p>
-<button onClick={() => proceed(false)}>Cancel</button>
-<button onClick={() => proceed(true)}>OK</button>
-</div>
-);
+const ConfirmationDialog = ({ show, proceed, confirmation }) => {
+    const [modalIsOpen, setIsOpen] = useState(true);
+
+    return (
+    <Modal className="card-overlay-container"
+        isOpen={modalIsOpen}
+        contentLabel="Card Overlay"
+      >
+        <p
+        style={{color:'#000'}}>{confirmation}</p>
+        <button onClick={() => {setIsOpen(false); proceed(false);}}>Cancel</button>
+        <button onClick={() => {setIsOpen(false); proceed(true);}}>OK</button>
+    </Modal>
+)};
 
 const confirm = createConfirmation(confirmable(ConfirmationDialog));
 
