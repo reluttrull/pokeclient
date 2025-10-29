@@ -37,7 +37,7 @@
 }
 
 .card {
-  padding: 2em;
+  padding: 1em;
   z-index: 1;
 }
 
@@ -138,6 +138,12 @@
   left: 1000px;
   width: 120px;
   background-color: rgba(200, 10, 10, 0.7);
+}
+
+#deck-select-button {
+  top: 20px;
+  width: 200px;
+  background-color: rgba(20, 20, 20, 0.7);
 }
 
 .info-block {

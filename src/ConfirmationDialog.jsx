@@ -8,7 +8,7 @@ const ConfirmationDialog = ({ show, proceed, confirmation }) => {
     return (
     <Modal className="card-overlay-container"
         isOpen={modalIsOpen}
-        contentLabel="Card Overlay"
+        contentLabel="Confirm Overlay"
       >
         <p
         style={{color:'#000'}}>{confirmation}</p>

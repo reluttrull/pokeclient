@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import './Shuffle.css';
 import './App.css';
 
-const Deck = ({shuffleCallback}) => {
+const Deck = ({shuffleCallback, selectCallback}) => {
     const [isAnimated, setIsAnimated] = useState(false);
-    const shuffle = document.getElementsByClassName('btn-shuffle')[0];
 
     function handleShuffle (event) {
         setIsAnimated(true);
@@ -26,7 +25,8 @@ const Deck = ({shuffleCallback}) => {
                 <img src="cardback.png" className="card-size" />
             </div>
         </div>
-        <button className="button btn-shuffle" onClick={handleShuffle}>Shuffle</button>
+        <button id="deck-select-button" className="button" onClick={selectCallback}>Select card from deck</button>
+        <button className="button" onClick={handleShuffle}>Shuffle</button>
     </div>
     </>
   );

@@ -18,6 +18,8 @@ const Game = ({deckNumber, gameStateCallback}) => {
   const [discard, setDiscard] = useState([]);
   const [prizes, setPrizes] = useState([0,3,1,4,2,5]);
   const [coinResult, setCoinResult] = useState(null);
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [cardsInDeck, setCardsInDeck] = useState([]);
   Modal.setAppElement('#root');
   
   const cardCallback = (data) => {
@@ -248,6 +250,42 @@ const Game = ({deckNumber, gameStateCallback}) => {
       .catch(error => console.error('Error shuffling deck:', error));
   }
 
+  function handleSelectFromDeck (event) {
+      fetchCards();
+      setIsSelecting(true);
+  }
+
+  function fetchCards() {
+      fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/peekatallcardsindeck/${gameGuid.current}`)
+      .then(response => response.json())
+      .then(data => {
+          setCardsInDeck(data);
+      })
+      .catch(error => console.error('Error fetching deck:', error));
+  }
+
+  function addFromDeckToHand(card) {
+    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/drawthiscardfromdeck/${gameGuid.current}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(card),
+      })
+      .then(response => {
+        if (response.status == 204) {
+          console.log('selected card from deck successfully');
+          card.attachedCards = [];
+          card.damageCounters = 0;
+          setHand([...hand, card]);
+          setCardsInDeck(cardsInDeck.filter(c => c.numberInDeck != card.numberInDeck));
+        }
+        else console.log(response);
+      })
+      .catch(error => console.error('Error selecting card from deck:', error));
+  }
+
   // on page load
   useEffect(() => {
     if (!gameGuid.current) {
@@ -275,6 +313,14 @@ const Game = ({deckNumber, gameStateCallback}) => {
   return (
     <>
     {!gameGuid.current && <Loading />}
+    {isSelecting && 
+        <Modal className="card-overlay-container"
+            isOpen={isSelecting}
+            contentLabel="Card Select Overlay"
+          >
+            {cardsInDeck.map(card => <a href="#" onClick={() => addFromDeckToHand(card)}><img src={`${card.image}/low.webp`} className='card card-size' /></a>)}
+            <button onClick={() => setIsSelecting(false)}>Done selecting cards</button>
+        </Modal>}
     {gameGuid.current &&
     <div>
       <div style={{position: 'absolute', top: '50px', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
@@ -304,7 +350,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
       <div id="discard-area" className="card-target">
         {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />}
       </div>
-      <Deck shuffleCallback={handleShuffle} />
+      <Deck shuffleCallback={handleShuffle} selectCallback={handleSelectFromDeck} />
       {prizes.map((prizeNum) =>
           <a href="#" key={prizeNum} onClick={() => drawPrize(prizeNum)} ><PrizeCard prizeNum={prizeNum} /></a>
       )}
