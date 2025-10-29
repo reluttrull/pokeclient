@@ -81,16 +81,13 @@ const Game = ({deckNumber, gameStateCallback}) => {
         });
         // then discard main card
         setDiscard([card, ...discard]);
-        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck != card.numberInDeck));
-        else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck != card.numberInDeck));
-        else if (active && active.numberInDeck == card.numberInDeck) setActive(null); 
+        removeCard(card);
         discardCard(card);
         break;
       case 7: // deck
+        card.attachedCards.forEach(attachedCard => returnToDeck(attachedCard));
         returnToDeck(card);
-        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck != card.numberInDeck));
-        else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck != card.numberInDeck));
-        else if (active.numberInDeck == card.numberInDeck) setActive(null); 
+        removeCard(card);
         break;
       default:
         break;
@@ -98,7 +95,9 @@ const Game = ({deckNumber, gameStateCallback}) => {
   }
 
   function removeCard(cardToRemove) {
-
+    if (hand.includes(cardToRemove)) setHand((hand) => hand.filter((c) => c.numberInDeck != cardToRemove.numberInDeck));
+    else if (bench.includes(cardToRemove)) setBench((bench) => bench.filter((c) => c.numberInDeck != cardToRemove.numberInDeck));
+    else if (active.numberInDeck == cardToRemove.numberInDeck) setActive(null); 
   }
 
   function attachCard(cardToAttach, isActive, benchPosition = -1) {
