@@ -86,6 +86,12 @@ const Game = ({deckNumber, gameStateCallback}) => {
         else if (active.numberInDeck == card.numberInDeck) setActive(null); 
         discardCard(card);
         break;
+      case 7: // deck
+        returnToDeck(card);
+        if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck != card.numberInDeck));
+        else if (bench.includes(card)) setBench((bench) => bench.filter((c) => c.numberInDeck != card.numberInDeck));
+        else if (active.numberInDeck == card.numberInDeck) setActive(null); 
+        break;
       default:
         break;
     }
@@ -93,7 +99,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
 
   function attachCard(cardToAttach, isActive, benchPosition = -1) {
     // attach to active
-    console.log(cardToAttach);
+    console.log('attaching', cardToAttach);
     if (isActive) {
       if (cardToAttach.category == "Energy") {
         active.attachedCards.push(cardToAttach);
@@ -123,6 +129,23 @@ const Game = ({deckNumber, gameStateCallback}) => {
       setBench(newBench);
     } else return false; // not a valid card to attach, send back
     return true;
+  }
+
+  function returnToDeck(card) {
+    console.log(`returning card ${card.numberInDeck} to deck`);
+    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/placecardonbottomofdeck/${gameGuid.current}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(card),
+      })
+      .then(response => {
+        if (response.status == 204) console.log('returned card to bottom of deck successfully');
+        else console.log(response);
+      })
+      .catch(error => console.error('Error returning card to deck:', error));
   }
 
   function getRandomCard() {

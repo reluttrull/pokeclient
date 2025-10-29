@@ -27,6 +27,7 @@ const Card = ({data, startOffset, positionCallback}) => {
     { left: 750, top: 315, position: 4 }, // bench 4
     { left: 900, top: 315, position: 5 }, // bench 5
     { left: 1100, top: 485, position: 6 }, // discard
+    { left: 1100, top: 310, position: 7 }, // deck
   ];
   
   function openModal() {
