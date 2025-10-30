@@ -209,19 +209,8 @@ const Game = ({deckNumber, gameStateCallback}) => {
   }
 
   function discardCard(card) {
-    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/discardcard/${gameGuid.current}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(card),
-      })
-      .then(response => {
-        if (response.status == 204) console.log('discarded card successfully');
-        else console.log(response);
-      })
-      .catch(error => console.error('Error discarding card:', error));
+    // for now, don't worry about informing the server
+    console.log('discarded card successfully');
   }
 
   function endGame() {
@@ -337,7 +326,10 @@ const Game = ({deckNumber, gameStateCallback}) => {
   }
 
   useEffect(() => {
-    setNumberInDeck(60 - hand.length - bench.length - discard.length - prizes.length - (active ? 1 : 0));
+    let totalAttached = 0; 
+    bench.forEach(card => totalAttached += card.attachedCards.length);
+    if (active) totalAttached += active.attachedCards.length;
+    setNumberInDeck(60 - hand.length - bench.length - discard.length - prizes.length - (active ? 1 : 0) - totalAttached);
   }, [hand, active, bench, discard, prizes]);
 
   // on page load
@@ -362,11 +354,6 @@ const Game = ({deckNumber, gameStateCallback}) => {
         .catch(error => console.error('Error fetching game start data:', error));
     }
     }, []);
-
-    useEffect(() => {
-  console.log("Active changed:", active);
-}, [active]);
-
 
   return (
     <>
