@@ -6,7 +6,6 @@ import PrizeCard from './PrizeCard.jsx';
 import CoinFlip from './CoinFlip.jsx';
 import Loading from './Loading.jsx';
 import Deck from './Deck.jsx';
-import ConfirmationDialog from './ConfirmationDialog.jsx';
 import './App.css';
 import baseset from './data/baseset.json';
 
@@ -22,7 +21,6 @@ const Game = ({deckNumber, gameStateCallback}) => {
   const [isSelectingDeck, setIsSelectingDeck] = useState(false);
   const [isSelectingDiscard, setIsSelectingDiscard] = useState(false);
   const [cardsInDeck, setCardsInDeck] = useState([]);
-  const [cardsInDiscard, setCardsInDiscard] = useState([]);
   const [numberInDeck, setNumberInDeck] = useState(47);
   const [rerenderKey, setRerenderKey] = useState(0);
   Modal.setAppElement('#root');
@@ -35,7 +33,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
     placeCardInSpot(card, data.pos);
   };
 
-  function placeCardInSpot(card, spot) {
+  async function placeCardInSpot(card, spot) {
     switch (spot) {
       case -1: // moving to hand
         if (hand.includes(card)) break; // card already belongs to hand and will snap back on its own
@@ -48,8 +46,8 @@ const Game = ({deckNumber, gameStateCallback}) => {
         break;
       case 0: // moving to active
         if (active) { // this spot occupied, attach or swap card instead
-          let isAttachedSuccessful = attachOrSwapCard(card, true);
-          if (!isAttachedSuccessful) return; // not valid, send back
+          let isAttachedSuccessful = await attachOrSwapCard(card, true);
+          if (!isAttachedSuccessful) break; // not valid, send back
         } else { // spot empty, place card in spot
           if (card.category != "Pokemon" || 
             (card.stage != "Basic" && !card.attachedCards.find((card) => card.stage && card.stage == "Basic"))) {
@@ -66,9 +64,10 @@ const Game = ({deckNumber, gameStateCallback}) => {
       case 4:
       case 5:
         spot--; // 0-index
+        console.log('entering case statement');
         if (bench.length > spot && bench[spot]) { // this spot occupied, attach or swap card instead
-          let isAttachedSuccessful = attachOrSwapCard(card, false, spot);
-          if (!isAttachedSuccessful) return; // not valid, send back
+          let isAttachedSuccessful = await attachOrSwapCard(card, false, spot);
+          if (!isAttachedSuccessful) break; // not valid, send back
         } else { // spot empty, place card in spot
           if (card.category != "Pokemon" || 
             (card.stage != "Basic" && !card.attachedCards.find((card) => card.stage && card.stage == "Basic"))) {
@@ -76,6 +75,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
           }
           setBench([...bench, card]); // always place at the end
         }
+        console.log('got where we shouldnt have', card);
         if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck != card.numberInDeck));
         else if (active && active.numberInDeck == card.numberInDeck) setActive(null); 
         else if (bench.includes(card)) setBench([...new Set(bench)]);
@@ -107,20 +107,65 @@ const Game = ({deckNumber, gameStateCallback}) => {
     else if (active.numberInDeck == cardToRemove.numberInDeck) setActive(null); 
   }
 
-  function attachOrSwapCard(cardToAttach, isActive, benchPosition = -1) {
+async function getValidEvolutionNames(pokemonName) {
+  try {
+    const response = await fetch(
+      `https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getvalidevolutions/${pokemonName}`
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching evolution data:', error);
+    return [];
+  }
+}
+
+  async function attachOrSwapCard(cardToAttach, isActive, benchPosition = -1) {
+    if (cardToAttach.name == "Pokémon Breeder") {
+      let baseName = isActive ? active.name : bench[benchPosition].name;
+      let validStageOneNames = await getValidEvolutionNames(baseName);
+      console.log(baseName, validStageOneNames);
+      let stageTwo = hand.find(card => validStageOneNames.includes(card.evolveFrom));
+      console.log(stageTwo);
+      if (!stageTwo) {
+        tightenHandLayout();
+        return false; // should send "Pokemon Breeder" card back to hand
+      } else if (isActive) {
+        stageTwo.attachedCards = [...active.attachedCards];
+        active.attachedCards = [];
+        stageTwo.attachedCards.push(active);
+        setActive(stageTwo);
+      } else {
+        stageTwo.attachedCards = [...bench[benchPosition].attachedCards];
+        bench[benchPosition].attachedCards = [];
+        stageTwo.attachedCards.push(bench[benchPosition]);
+        let newBench = bench.map((card, index) => {
+          if (index == benchPosition) return stageTwo;
+          else return card;
+        });
+        setBench(newBench);
+      }
+      // take stage two and trainer card out of hand, move trainer to discard
+      setHand(hand.filter(card => card.numberInDeck != stageTwo.numberInDeck && card.numberInDeck != cardToAttach.numberInDeck));
+      setDiscard([...discard, cardToAttach]);
+      return false;
+    }
     // attach to active
     console.log('attaching', cardToAttach);
     if (isActive) {
-      if (cardToAttach.category == "Energy") {
+      if (cardToAttach.category == "Energy") { // attach energy
         active.attachedCards.push(cardToAttach);
-      } else if (hand.includes(cardToAttach)
+      } else if (hand.includes(cardToAttach) // evolve
             && cardToAttach.evolveFrom && cardToAttach.evolveFrom == active.name) {
         let attached = active.attachedCards;
         active.attachedCards = [];
         cardToAttach.attachedCards = [...attached, active];
         cardToAttach.damageCounters = active.damageCounters;
         setActive(cardToAttach);
-      } else if (bench.includes(cardToAttach)) {
+      } else if (bench.includes(cardToAttach)) { // swap
         // swap with bench
         let newActive = cardToAttach;
         let newBench = bench.filter((card) => card.numberInDeck != cardToAttach.numberInDeck);
@@ -132,9 +177,9 @@ const Game = ({deckNumber, gameStateCallback}) => {
       return true;
     }
     // attach to bench
-    if (cardToAttach.category == "Energy") {
+    if (cardToAttach.category == "Energy") { // attach energy
       bench[benchPosition].attachedCards.push(cardToAttach);
-    } else if (hand.includes(cardToAttach)
+    } else if (hand.includes(cardToAttach) // evolve
           && cardToAttach.evolveFrom && cardToAttach.evolveFrom == bench[benchPosition].name) {
       // move energies and prior evolutions to attached cards of new top card
       let attached = bench[benchPosition].attachedCards;
@@ -147,13 +192,14 @@ const Game = ({deckNumber, gameStateCallback}) => {
         else return card;
       });
       setBench(newBench);
-    } else if (active == cardToAttach) {
+    } else if (active == cardToAttach) { // swap
       // swap with active
-      let newActive = bench[benchPosition];
-      let newBench = bench.filter((card) => card.numberInDeck != newActive.numberInDeck);
-      newBench.push(cardToAttach);
+      setActive(bench[benchPosition]);
+      let newBench = bench.map((card, index) => {
+        if (index == benchPosition) return cardToAttach;
+        else return card;
+      });
       setBench(newBench);
-      setActive(newActive);
       return false;
     } else return false; // not a valid card to attach, send back
     return true;
@@ -318,7 +364,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
     setDiscard(discard.filter(c => c.numberInDeck != card.numberInDeck));
   }
 
-  function tightenHandLayout (event) {
+  function tightenHandLayout () {
     let sorted = [...hand];
     sorted.sort((a,b) => a.category.localeCompare(b.category));
     setHand(sorted);
@@ -354,6 +400,10 @@ const Game = ({deckNumber, gameStateCallback}) => {
         .catch(error => console.error('Error fetching game start data:', error));
     }
     }, []);
+
+    useEffect(() => {
+      console.log('active changed', active);
+    }, [active]);
 
   return (
     <>
