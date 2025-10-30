@@ -29,10 +29,6 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  /* background-image: url('/smallergameboard.png');  
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: fixed; */
 }
 
 h1 {

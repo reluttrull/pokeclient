@@ -8,7 +8,7 @@ const AttachedEnergy = ({cardName, offset, deleteCallback}) => {
   const [left, setLeft] = useValue(offset + 20);
   let energyType = cardName.replace(" Energy", "");
 
-  let urlstring = `/${energyType}.png`;
+  let urlstring = `/pokeclient/${energyType}.png`;
 
   console.log(left);
 
