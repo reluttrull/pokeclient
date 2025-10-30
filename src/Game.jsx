@@ -47,8 +47,8 @@ const Game = ({deckNumber, gameStateCallback}) => {
         else if (active && active.numberInDeck == card.numberInDeck) setActive(null); 
         break;
       case 0: // moving to active
-        if (active) { // this spot occupied, attach card instead
-          let isAttachedSuccessful = attachCard(card, true);
+        if (active) { // this spot occupied, attach or swap card instead
+          let isAttachedSuccessful = attachOrSwapCard(card, true);
           if (!isAttachedSuccessful) return; // not valid, send back
         } else { // spot empty, place card in spot
           if (card.category != "Pokemon" || 
@@ -66,8 +66,8 @@ const Game = ({deckNumber, gameStateCallback}) => {
       case 4:
       case 5:
         spot--; // 0-index
-        if (bench.length > spot && bench[spot]) { // this spot occupied, attach card instead
-          let isAttachedSuccessful = attachCard(card, false, spot);
+        if (bench.length > spot && bench[spot]) { // this spot occupied, attach or swap card instead
+          let isAttachedSuccessful = attachOrSwapCard(card, false, spot);
           if (!isAttachedSuccessful) return; // not valid, send back
         } else { // spot empty, place card in spot
           if (card.category != "Pokemon" || 
@@ -107,25 +107,35 @@ const Game = ({deckNumber, gameStateCallback}) => {
     else if (active.numberInDeck == cardToRemove.numberInDeck) setActive(null); 
   }
 
-  function attachCard(cardToAttach, isActive, benchPosition = -1) {
+  function attachOrSwapCard(cardToAttach, isActive, benchPosition = -1) {
     // attach to active
     console.log('attaching', cardToAttach);
     if (isActive) {
       if (cardToAttach.category == "Energy") {
         active.attachedCards.push(cardToAttach);
-      } else if (cardToAttach.evolveFrom && cardToAttach.evolveFrom == active.name) {
+      } else if (hand.includes(cardToAttach)
+            && cardToAttach.evolveFrom && cardToAttach.evolveFrom == active.name) {
         let attached = active.attachedCards;
         active.attachedCards = [];
         cardToAttach.attachedCards = [...attached, active];
         cardToAttach.damageCounters = active.damageCounters;
         setActive(cardToAttach);
+      } else if (bench.includes(cardToAttach)) {
+        // swap with bench
+        let newActive = cardToAttach;
+        let newBench = bench.filter((card) => card.numberInDeck != cardToAttach.numberInDeck);
+        newBench.push(active);
+        setBench(newBench);
+        setActive(newActive);
+        return false;
       } else return false; // not a valid card to attach, send back
       return true;
     }
     // attach to bench
     if (cardToAttach.category == "Energy") {
       bench[benchPosition].attachedCards.push(cardToAttach);
-    } else if (cardToAttach.evolveFrom && cardToAttach.evolveFrom == bench[benchPosition].name) {
+    } else if (hand.includes(cardToAttach)
+          && cardToAttach.evolveFrom && cardToAttach.evolveFrom == bench[benchPosition].name) {
       // move energies and prior evolutions to attached cards of new top card
       let attached = bench[benchPosition].attachedCards;
       bench[benchPosition].attachedCards = [];
@@ -137,6 +147,14 @@ const Game = ({deckNumber, gameStateCallback}) => {
         else return card;
       });
       setBench(newBench);
+    } else if (active == cardToAttach) {
+      // swap with active
+      let newActive = bench[benchPosition];
+      let newBench = bench.filter((card) => card.numberInDeck != newActive.numberInDeck);
+      newBench.push(cardToAttach);
+      setBench(newBench);
+      setActive(newActive);
+      return false;
     } else return false; // not a valid card to attach, send back
     return true;
   }
@@ -314,7 +332,6 @@ const Game = ({deckNumber, gameStateCallback}) => {
   function tightenHandLayout (event) {
     let sorted = [...hand];
     sorted.sort((a,b) => a.category.localeCompare(b.category));
-    sorted.forEach((card) => console.log(card));
     setHand(sorted);
     setRerenderKey(prev => prev + 1); // trigger re-render
   }
@@ -345,6 +362,10 @@ const Game = ({deckNumber, gameStateCallback}) => {
         .catch(error => console.error('Error fetching game start data:', error));
     }
     }, []);
+
+    useEffect(() => {
+  console.log("Active changed:", active);
+}, [active]);
 
 
   return (
