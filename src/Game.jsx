@@ -7,7 +7,6 @@ import CoinFlip from './CoinFlip.jsx';
 import Loading from './Loading.jsx';
 import Deck from './Deck.jsx';
 import './App.css';
-import baseset from './data/baseset.json';
 
 const Game = ({deckNumber, gameStateCallback}) => {
   const gameGuid = useRef(null);
@@ -29,7 +28,6 @@ const Game = ({deckNumber, gameStateCallback}) => {
     // update where card is placed
     console.log(`card ${data.card.numberInDeck} moved to ${data.pos}`);
     var card = data.card;
-    console.log(card);
     placeCardInSpot(card, data.pos);
   };
 
@@ -64,7 +62,6 @@ const Game = ({deckNumber, gameStateCallback}) => {
       case 4:
       case 5:
         spot--; // 0-index
-        console.log('entering case statement');
         if (bench.length > spot && bench[spot]) { // this spot occupied, attach or swap card instead
           let isAttachedSuccessful = await attachOrSwapCard(card, false, spot);
           if (!isAttachedSuccessful) break; // not valid, send back
@@ -75,7 +72,6 @@ const Game = ({deckNumber, gameStateCallback}) => {
           }
           setBench([...bench, card]); // always place at the end
         }
-        console.log('got where we shouldnt have', card);
         if (hand.includes(card)) setHand((hand) => hand.filter((c) => c.numberInDeck != card.numberInDeck));
         else if (active && active.numberInDeck == card.numberInDeck) setActive(null); 
         else if (bench.includes(card)) setBench([...new Set(bench)]);
@@ -84,12 +80,12 @@ const Game = ({deckNumber, gameStateCallback}) => {
         // discard any attached cards first
         card.attachedCards.forEach(function(c) {
           setDiscard([c, ...discard]);
-          discardCard(c);
+          console.log('discarded card successfully');
         });
         // then discard main card
         setDiscard([card, ...discard]);
         removeCard(card);
-        discardCard(card);
+        console.log('discarded card successfully');
         break;
       case 7: // deck
         card.attachedCards.forEach(attachedCard => returnToDeck(attachedCard));
@@ -127,10 +123,9 @@ async function getValidEvolutionNames(pokemonName) {
     if (cardToAttach.name == "Pokémon Breeder") {
       let baseName = isActive ? active.name : bench[benchPosition].name;
       let validStageOneNames = await getValidEvolutionNames(baseName);
-      console.log(baseName, validStageOneNames);
       let stageTwo = hand.find(card => validStageOneNames.includes(card.evolveFrom));
-      console.log(stageTwo);
       if (!stageTwo) {
+        console.log(`Pokemon Breeder: ${baseName} skips ${stageTwo.evolveFrom} and evolves into ${stageTwo.name}`);
         tightenHandLayout();
         return false; // should send "Pokemon Breeder" card back to hand
       } else if (isActive) {
@@ -222,11 +217,6 @@ async function getValidEvolutionNames(pokemonName) {
       .catch(error => console.error('Error returning card to deck:', error));
   }
 
-  function getRandomCard() {
-    let rand = Math.floor(Math.random() * baseset.length);
-    return baseset[rand];
-  }
-
   function drawPrize(prizeNum) {
     fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/drawcardfromprizes/${gameGuid.current}`)
     .then(response => response.json())
@@ -252,11 +242,6 @@ async function getValidEvolutionNames(pokemonName) {
       setHand([...hand, data]);
     })
     .catch(error => console.error('Error fetching card data:', error));
-  }
-
-  function discardCard(card) {
-    // for now, don't worry about informing the server
-    console.log('discarded card successfully');
   }
 
   function endGame() {
@@ -400,10 +385,6 @@ async function getValidEvolutionNames(pokemonName) {
         .catch(error => console.error('Error fetching game start data:', error));
     }
     }, []);
-
-    useEffect(() => {
-      console.log('active changed', active);
-    }, [active]);
 
   return (
     <>

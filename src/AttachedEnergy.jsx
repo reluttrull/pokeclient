@@ -4,13 +4,10 @@ import confirm from './ConfirmationDialog.jsx';
 import './App.css';
 
 const AttachedEnergy = ({cardName, offset, deleteCallback}) => {
-  console.log(cardName);
   const [left, setLeft] = useValue(offset + 20);
   let energyType = cardName.replace(" Energy", "");
 
   let urlstring = `/pokeclient/${energyType}.png`;
-
-  console.log(left);
 
   const handleEnergyClick = async () => {
     if (await confirm({ confirmation: 'Do you really want to delete this energy?' })) {
