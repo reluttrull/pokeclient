@@ -4,6 +4,7 @@ import { FaCircleInfo } from 'react-icons/fa6';
 import Modal from 'react-modal';
 import AttachedEnergy from './AttachedEnergy.jsx';
 import Damage from './Damage.jsx';
+import SpecialConditions from './SpecialConditions.jsx';
 import './App.css';
 
 const Card = ({data, startOffset, positionCallback}) => {
@@ -131,6 +132,7 @@ const Card = ({data, startOffset, positionCallback}) => {
         <AttachedEnergy key={card.numberInDeck} cardName={card.name} offset={index * 20} deleteCallback={handleEnergyDelete} />
       ))}
       {data.category == "Pokemon" && <Damage damageCounters={data.damageCounters} damageCallback={handleDamageChange} />}
+      {data.category == "Pokemon" && <SpecialConditions />}
     </animate.div>
     <Modal className="card-overlay-container"
         isOpen={modalIsOpen}
