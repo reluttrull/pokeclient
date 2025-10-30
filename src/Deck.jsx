@@ -26,7 +26,7 @@ const Deck = ({displayNum, shuffleCallback, selectCallback}) => {
                 <img src="cardback.png" className="card-size" />
             </div>
         </div>
-        <button id="deck-select-button" className="button" onClick={selectCallback}>Select card from deck</button>
+        <button id="deck-select-button" className="button" onClick={selectCallback}>Select from deck</button>
         <button className="button" onClick={handleShuffle}>Shuffle</button>
     </div>
     </>

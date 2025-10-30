@@ -19,8 +19,10 @@ const Game = ({deckNumber, gameStateCallback}) => {
   const [discard, setDiscard] = useState([]);
   const [prizes, setPrizes] = useState([0,3,1,4,2,5]);
   const [coinResult, setCoinResult] = useState(null);
-  const [isSelecting, setIsSelecting] = useState(false);
+  const [isSelectingDeck, setIsSelectingDeck] = useState(false);
+  const [isSelectingDiscard, setIsSelectingDiscard] = useState(false);
   const [cardsInDeck, setCardsInDeck] = useState([]);
+  const [cardsInDiscard, setCardsInDiscard] = useState([]);
   const [numberInDeck, setNumberInDeck] = useState(47);
   const [rerenderKey, setRerenderKey] = useState(0);
   Modal.setAppElement('#root');
@@ -254,15 +256,23 @@ const Game = ({deckNumber, gameStateCallback}) => {
   }
 
   function handleCloseSelectFromDeck (event) {
-    setIsSelecting(false);
+    setIsSelectingDeck(false);
   }
 
   function handleSelectFromDeck (event) {
-      fetchCards();
-      setIsSelecting(true);
+      fetchCardsFromDeck();
+      setIsSelectingDeck(true);
   }
 
-  function fetchCards() {
+  function handleCloseSelectFromDiscard (event) {
+      setIsSelectingDiscard(false);
+  }
+
+  function handleSelectFromDiscard (event) {
+      setIsSelectingDiscard(true);
+  }
+
+  function fetchCardsFromDeck() {
       fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/peekatallcardsindeck/${gameGuid.current}`)
       .then(response => response.json())
       .then(data => {
@@ -292,8 +302,20 @@ const Game = ({deckNumber, gameStateCallback}) => {
       })
       .catch(error => console.error('Error selecting card from deck:', error));
   }
+  
+  function addFromDiscardToHand(card) {
+    // currently the server doesn't know what's in the discard pile (and doesn't need to yet)
+    card.attachedCards = [];
+    card.damageCounters = 0;
+    setHand([...hand, card]);
+    setDiscard(discard.filter(c => c.numberInDeck != card.numberInDeck));
+  }
 
   function tightenHandLayout (event) {
+    let sorted = [...hand];
+    sorted.sort((a,b) => a.category.localeCompare(b.category));
+    sorted.forEach((card) => console.log(card));
+    setHand(sorted);
     setRerenderKey(prev => prev + 1); // trigger re-render
   }
 
@@ -328,15 +350,25 @@ const Game = ({deckNumber, gameStateCallback}) => {
   return (
     <>
     {!gameGuid.current && <Loading />}
-    {isSelecting && 
+    {isSelectingDeck && 
         <Modal className="card-overlay-container"
-            isOpen={isSelecting}
+            isOpen={isSelectingDeck}
             onRequestClose={handleCloseSelectFromDeck}
-            contentLabel="Card Select Overlay"
+            contentLabel="Deck Card Select Overlay"
             onClick={handleCloseSelectFromDeck}
           >
-            {cardsInDeck.map(card => <a href="#" onClick={() => addFromDeckToHand(card)}><img src={`${card.image}/low.webp`} className='card-size' /></a>)}
+            {cardsInDeck.map(card => <a href="#" key={'deckselect'+card.numberInDeck} onClick={() => addFromDeckToHand(card)}><img src={`${card.image}/low.webp`} className='card-size' /></a>)}
             <button onClick={handleCloseSelectFromDeck}>Done selecting cards</button>
+        </Modal>}
+    {isSelectingDiscard && 
+        <Modal className="card-overlay-container"
+            isOpen={isSelectingDiscard}
+            onRequestClose={handleCloseSelectFromDiscard}
+            contentLabel="Discard Card Select Overlay"
+            onClick={handleCloseSelectFromDiscard}
+          >
+            {discard.map(card => <a href="#" key={'discardselect'+card.numberInDeck} onClick={() => addFromDiscardToHand(card)}><img src={`${card.image}/low.webp`} className='card-size' /></a>)}
+            <button onClick={handleCloseSelectFromDiscard}>Done selecting cards</button>
         </Modal>}
     {gameGuid.current &&
     <div>
@@ -365,6 +397,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
         {bench.length > 4 && <Card key={bench[4].numberInDeck} data={bench[4]} startOffset={0} positionCallback={cardCallback} />}
       </div>
       <div id="discard-area" className="card-target">
+        <button id="discard-select-button" className="button" onClick={handleSelectFromDiscard}>Select from discard</button>
         {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />}
       </div>
       <Deck displayNum={numberInDeck} shuffleCallback={handleShuffle} selectCallback={handleSelectFromDeck} />

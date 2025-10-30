@@ -99,6 +99,13 @@
   background-color: rgba(120, 120, 120, 0.5);
 }
 
+#discard-select-button {
+  top: 60px;
+  left: 120px;
+  width: 180px;
+  background-color: rgba(20, 20, 20, 0.7);
+}
+
 #deck {
   position:absolute;
   top: 240px;
@@ -142,7 +149,7 @@
 
 #deck-select-button {
   top: 20px;
-  width: 200px;
+  width: 180px;
   background-color: rgba(20, 20, 20, 0.7);
 }
 
