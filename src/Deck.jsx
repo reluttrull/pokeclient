@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Shuffle.css';
 import './App.css';
 
-const Deck = ({shuffleCallback, selectCallback}) => {
+const Deck = ({displayNum, shuffleCallback, selectCallback}) => {
     const [isAnimated, setIsAnimated] = useState(false);
 
     function handleShuffle (event) {
@@ -15,6 +15,7 @@ const Deck = ({shuffleCallback, selectCallback}) => {
     <>
     <div className="card-wrapper card-target" id="deck">
         <div className={isAnimated ? "card-list is-animated" : "card-list"}>
+            <div style={{zIndex:6}}>{displayNum}</div>
             <div className="card-list__item" data-card="0">
                 <img src="cardback.png" className="card-size" />
             </div>

@@ -20,6 +20,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
   const [coinResult, setCoinResult] = useState(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [cardsInDeck, setCardsInDeck] = useState([]);
+  const [numberInDeck, setNumberInDeck] = useState(47);
   Modal.setAppElement('#root');
   
   const cardCallback = (data) => {
@@ -250,6 +251,10 @@ const Game = ({deckNumber, gameStateCallback}) => {
       .catch(error => console.error('Error shuffling deck:', error));
   }
 
+  function handleCloseSelectFromDeck (event) {
+    setIsSelecting(false);
+  }
+
   function handleSelectFromDeck (event) {
       fetchCards();
       setIsSelecting(true);
@@ -286,6 +291,10 @@ const Game = ({deckNumber, gameStateCallback}) => {
       .catch(error => console.error('Error selecting card from deck:', error));
   }
 
+  useEffect(() => {
+    setNumberInDeck(60 - hand.length - bench.length - discard.length - prizes.length - (active ? 1 : 0));
+  }, [hand, active, bench, discard, prizes]);
+
   // on page load
   useEffect(() => {
     if (!gameGuid.current) {
@@ -316,10 +325,12 @@ const Game = ({deckNumber, gameStateCallback}) => {
     {isSelecting && 
         <Modal className="card-overlay-container"
             isOpen={isSelecting}
+            onRequestClose={handleCloseSelectFromDeck}
             contentLabel="Card Select Overlay"
+            onClick={handleCloseSelectFromDeck}
           >
-            {cardsInDeck.map(card => <a href="#" onClick={() => addFromDeckToHand(card)}><img src={`${card.image}/low.webp`} className='card card-size' /></a>)}
-            <button onClick={() => setIsSelecting(false)}>Done selecting cards</button>
+            {cardsInDeck.map(card => <a href="#" onClick={() => addFromDeckToHand(card)}><img src={`${card.image}/low.webp`} className='card-size' /></a>)}
+            <button onClick={handleCloseSelectFromDeck}>Done selecting cards</button>
         </Modal>}
     {gameGuid.current &&
     <div>
@@ -350,7 +361,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
       <div id="discard-area" className="card-target">
         {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />}
       </div>
-      <Deck shuffleCallback={handleShuffle} selectCallback={handleSelectFromDeck} />
+      <Deck displayNum={numberInDeck} shuffleCallback={handleShuffle} selectCallback={handleSelectFromDeck} />
       {prizes.map((prizeNum) =>
           <a href="#" key={prizeNum} onClick={() => drawPrize(prizeNum)} ><PrizeCard prizeNum={prizeNum} /></a>
       )}
