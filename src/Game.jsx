@@ -78,12 +78,11 @@ const Game = ({deckNumber, gameStateCallback}) => {
         break;
       case 6: // moving to discard
         // discard any attached cards first
-        card.attachedCards.forEach(function(c) {
-          setDiscard([c, ...discard]);
-          console.log('discarded card successfully');
-        });
+        let newDiscard = [...card.attachedCards, ...discard];
+        card.attachedCards = [];
+        newDiscard = [card, ...newDiscard];
         // then discard main card
-        setDiscard([card, ...discard]);
+        setDiscard(newDiscard);
         removeCard(card);
         console.log('discarded card successfully');
         break;
