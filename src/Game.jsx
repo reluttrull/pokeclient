@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
+import { PiCardsThree } from 'react-icons/pi';
 import Card from './Card.jsx';
 import PrizeCard from './PrizeCard.jsx';
 import CoinFlip from './CoinFlip.jsx';
@@ -21,6 +22,7 @@ const Game = ({deckNumber, gameStateCallback}) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [cardsInDeck, setCardsInDeck] = useState([]);
   const [numberInDeck, setNumberInDeck] = useState(47);
+  const [rerenderKey, setRerenderKey] = useState(0);
   Modal.setAppElement('#root');
   
   const cardCallback = (data) => {
@@ -291,6 +293,10 @@ const Game = ({deckNumber, gameStateCallback}) => {
       .catch(error => console.error('Error selecting card from deck:', error));
   }
 
+  function tightenHandLayout (event) {
+    setRerenderKey(prev => prev + 1); // trigger re-render
+  }
+
   useEffect(() => {
     setNumberInDeck(60 - hand.length - bench.length - discard.length - prizes.length - (active ? 1 : 0));
   }, [hand, active, bench, discard, prizes]);
@@ -366,8 +372,10 @@ const Game = ({deckNumber, gameStateCallback}) => {
           <a href="#" key={prizeNum} onClick={() => drawPrize(prizeNum)} ><PrizeCard prizeNum={prizeNum} /></a>
       )}
       <div id="hand-area" className="card-target">
+        <PiCardsThree id="hand-tighten-button" className="icon-button" onClick={tightenHandLayout} 
+            alt="tighten up hand layout" title="tighten up hand layout" />
         {hand.map((card, index) => (
-            <Card key={card.numberInDeck} data={card} startOffset={index * 20} positionCallback={cardCallback} />
+            <Card key={`${card.numberInDeck}-${rerenderKey}`} data={card} startOffset={index * 20} positionCallback={cardCallback} />
           ))}
       </div>
     </div>}

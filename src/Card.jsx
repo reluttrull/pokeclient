@@ -126,7 +126,7 @@ const Card = ({data, startOffset, positionCallback}) => {
         translateY,
       }}
     >
-      <FaCircleInfo className="info-block" onClick={openModal} />
+      <FaCircleInfo className="info-block" onClick={openModal} alt="see full card" title="see full card" />
       {attachedEnergy.length > 0 && 
           attachedEnergy.map((card, index) => (
         <AttachedEnergy key={card.numberInDeck} cardName={card.name} offset={index * 20} deleteCallback={handleEnergyDelete} />

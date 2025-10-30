@@ -146,6 +146,34 @@
   background-color: rgba(20, 20, 20, 0.7);
 }
 
+#add-damage-counter-button {
+  position: absolute;
+  top: 0px; 
+  left: 100px;
+}
+
+#damage-display {
+  position: absolute;
+  top: 20px; 
+  left: 105px;
+}
+
+#remove-damage-counter-button {
+  position: absolute;
+  top: 50px; 
+  left: 100px;
+}
+
+#hand-tighten-button {
+  position: absolute;
+  top: 60px;
+  left: -40px;
+}
+
+.icon-button {
+  cursor: pointer;
+}
+
 .info-block {
   position: absolute;
   top: -20px;  

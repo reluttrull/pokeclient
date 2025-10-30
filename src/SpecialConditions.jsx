@@ -11,14 +11,14 @@ const SpecialConditions = ({conditions, conditionsCallback}) => {
 
   return (
     <>
-        <GiPoisonBottle onClick={() => setIsPoisoned(!isPoisoned)}
-            class={isPoisoned ? "poisoned active-condition" : "poisoned inactive-condition"} />
-        <GiNightSleep onClick={() => setIsAsleep(!isAsleep)}
-            class={isAsleep ? "asleep active-condition" : "asleep inactive-condition"} />
-        <GiElectricalCrescent onClick={() => setIsParalyzed(!isParalyzed)}
-            class={isParalyzed ? "paralyzed active-condition" : "paralyzed inactive-condition"} />
-        <ImConfused onClick={() => setIsConfused(!isConfused)}
-            class={isConfused ? "confused active-condition" : "confused inactive-condition"} />
+        <GiPoisonBottle onClick={() => setIsPoisoned(!isPoisoned)} alt="poison" title="poison"
+            className={isPoisoned ? "poisoned icon-button active-condition" : "poisoned icon-button inactive-condition"} />
+        <GiNightSleep onClick={() => setIsAsleep(!isAsleep)} alt="sleep" title="sleep"
+            className={isAsleep ? "asleep icon-button active-condition" : "asleep icon-button inactive-condition"} />
+        <GiElectricalCrescent onClick={() => setIsParalyzed(!isParalyzed)} alt="paralyze" title="paralyze"
+            className={isParalyzed ? "paralyzed icon-button active-condition" : "paralyzed icon-button inactive-condition"} />
+        <ImConfused onClick={() => setIsConfused(!isConfused)} alt="confuse" title="confuse"
+            className={isConfused ? "confused icon-button active-condition" : "confused icon-button inactive-condition"} />
     </>
   );
 };

@@ -13,9 +13,9 @@ const Damage = ({damageCounters, damageCallback}) => {
 
   return (
     <>
-    <FaCirclePlus style={{position: 'absolute', top: '0px', left: '100px' }} onClick={() => changeDamage(1)} />
-    <div style={{position: 'absolute', top: '20px', left: '105px' }}>DMG {displayDamageCounters * 10}</div>
-    <FaCircleMinus style={{position: 'absolute', top: '70px', left: '100px' }} onClick={() => changeDamage(-1)} />
+    <FaCirclePlus id="add-damage-counter-button" onClick={() => changeDamage(1)} />
+    <div id="damage-display">{displayDamageCounters * 10}</div>
+    <FaCircleMinus id="remove-damage-counter-button" onClick={() => changeDamage(-1)} />
     </>
   );
 };
