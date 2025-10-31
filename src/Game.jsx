@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
-import { PiCardsThree } from 'react-icons/pi';
-import Card from './Card.jsx';
-import PrizeCard from './PrizeCard.jsx';
+import PlayArea from './PlayArea.jsx';
 import CoinFlip from './CoinFlip.jsx';
 import Loading from './Loading.jsx';
-import Deck from './Deck.jsx';
 import './App.css';
 
 const Game = ({deckNumber, gameStateCallback}) => {
@@ -408,48 +405,28 @@ async function getValidEvolutionNames(pokemonName) {
             {discard.map(card => <a href="#" key={'discardselect'+card.numberInDeck} onClick={() => addFromDiscardToHand(card)}><img src={`${card.image}/low.webp`} className='card-size' /></a>)}
             <button onClick={handleCloseSelectFromDiscard}>Done selecting cards</button>
         </Modal>}
-    {gameGuid.current &&
-    <div>
-      <div style={{position: 'absolute', top: '50px', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
-      <div style={{position: 'absolute', top: '100px', left: '700px', width: '200px'}}># cards in hand = {hand && hand.length}</div>
-      <div style={{position: 'absolute', top: '150px', left: '700px', width: '200px'}}># cards in bench = {bench && bench.length}</div>
-      <button onClick={getCoinFlip} id="flip-coin-button">flip coin</button>
-      <button onClick={drawTopCard} id="draw-card-button">draw</button>
-      <button onClick={endGame} id="end-game-button">end game</button>
-      <div id="user-active" className="card-target">
-        {active && <Card key={active.numberInDeck} data={active} startOffset={0} positionCallback={cardCallback} />}
-      </div>
-      <div id="user-bench-1" className="card-target">
-        {bench.length > 0 && <Card key={bench[0].numberInDeck} data={bench[0]} startOffset={0} positionCallback={cardCallback} />}
-      </div>
-      <div id="user-bench-2" className="card-target">
-        {bench.length > 1 && <Card key={bench[1].numberInDeck} data={bench[1]} startOffset={0} positionCallback={cardCallback} />}
-      </div>
-      <div id="user-bench-3" className="card-target">
-        {bench.length > 2 && <Card key={bench[2].numberInDeck} data={bench[2]} startOffset={0} positionCallback={cardCallback} />}
-      </div>
-      <div id="user-bench-4" className="card-target">
-        {bench.length > 3 && <Card key={bench[3].numberInDeck} data={bench[3]} startOffset={0} positionCallback={cardCallback} />}
-      </div>
-      <div id="user-bench-5" className="card-target">
-        {bench.length > 4 && <Card key={bench[4].numberInDeck} data={bench[4]} startOffset={0} positionCallback={cardCallback} />}
-      </div>
-      <div id="discard-area" className="card-target">
-        <button id="discard-select-button" className="button" onClick={handleSelectFromDiscard}>Select from discard</button>
-        {discard.length > 0 && <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />}
-      </div>
-      <Deck displayNum={numberInDeck} shuffleCallback={handleShuffle} selectCallback={handleSelectFromDeck} />
-      {prizes.map((prizeNum) =>
-          <a href="#" key={prizeNum} onClick={() => drawPrize(prizeNum)} ><PrizeCard prizeNum={prizeNum} /></a>
-      )}
-      <div id="hand-area" className="card-target">
-        <PiCardsThree id="hand-tighten-button" className="icon-button" onClick={tightenHandLayout} 
-            alt="tighten up hand layout" title="tighten up hand layout" />
-        {hand.map((card, index) => (
-            <Card key={`${card.numberInDeck}-${rerenderKey}`} data={card} startOffset={index * 20} positionCallback={cardCallback} />
-          ))}
-      </div>
-    </div>}
+        {gameGuid.current && (
+          <>
+          <PlayArea
+            hand={hand}
+            bench={bench}
+            active={active}
+            discard={discard}
+            prizes={prizes}
+            numberInDeck={numberInDeck}
+            rerenderKey={rerenderKey}
+            cardCallback={cardCallback}
+            tightenHandLayout={tightenHandLayout}
+            drawPrize={drawPrize}
+            handleSelectFromDiscard={handleSelectFromDiscard}
+            handleSelectFromDeck={handleSelectFromDeck}
+            handleShuffle={handleShuffle}
+          />      
+          <button onClick={getCoinFlip} id="flip-coin-button">flip coin</button>
+          <button onClick={drawTopCard} id="draw-card-button">draw</button>
+          <button onClick={endGame} id="end-game-button">end game</button>
+          </>
+        )}
         {coinResult != null && <Modal className="coin-flip-container"
             isOpen={getCoinFlip}
             onRequestClose={closeCoinFlip}
