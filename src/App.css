@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  color: #fff;
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
   user-select: none;
@@ -101,7 +102,7 @@
 
 #discard-select-button {
   top: 60px;
-  left: 140px;
+  left: 150px;
   width: 180px;
   background-color: rgba(20, 20, 20, 0.7);
 }
@@ -128,6 +129,7 @@
   top: 50px; 
   left: 1000px;
   width: 120px;
+  color: #fff;
   background-color: rgba(20, 20, 20, 0.7);
 }
 
@@ -136,6 +138,7 @@
   top: 100px;
   left: 1000px;
   width: 120px;
+  color: #fff;
   background-color: rgba(20, 20, 20, 0.7);
 }
 
@@ -144,6 +147,7 @@
   top: 150px; 
   left: 1000px;
   width: 120px;
+  color: #fff;
   background-color: rgba(200, 10, 10, 0.7);
 }
 

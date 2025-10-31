@@ -11,7 +11,7 @@ const ConfirmationDialog = ({ show, proceed, confirmation }) => {
         contentLabel="Confirm Overlay"
       >
         <p
-        style={{color:'#000'}}>{confirmation}</p>
+        style={{color:'#000', fontWeight:'bold'}}>{confirmation}</p>
         <button onClick={() => {setIsOpen(false); proceed(false);}}>Cancel</button>
         <button onClick={() => {setIsOpen(false); proceed(true);}}>OK</button>
     </Modal>
