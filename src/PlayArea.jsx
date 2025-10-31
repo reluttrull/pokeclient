@@ -2,6 +2,7 @@
 import React from 'react';
 import { PiCardsThree } from 'react-icons/pi';
 import Card from './Card.jsx';
+import StaticCard from './StaticCard.jsx';
 import PrizeCard from './PrizeCard.jsx';
 import Deck from './Deck.jsx';
 import './App.css';
@@ -38,7 +39,7 @@ const PlayArea = ({
           Select from discard
         </button>
         {discard.length > 0 && (
-          <Card key={discard[0].numberInDeck} data={discard[0]} startOffset={0} positionCallback={cardCallback} />
+          <StaticCard key={discard[0].numberInDeck} data={discard[0]} />
         )}
       </div>
 
