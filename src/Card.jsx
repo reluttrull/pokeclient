@@ -23,7 +23,7 @@ const Card = ({data, startOffset, positionCallback}) => {
   const [backgroundImage, setBackgroundImage] = useValue(urlstring);
   const targets = [
     { left: 480, top: 470, position: -1}, // hand
-    { left: 580, top: 470, position: -1}, // extend hand area right
+    { left: 590, top: 470, position: -1}, // extend hand area right
     { left: 600, top: 115, position: 0 }, // active
     { left: 300, top: 315, position: 1 }, // bench 1
     { left: 450, top: 315, position: 2 }, // bench 2
@@ -52,8 +52,8 @@ const Card = ({data, startOffset, positionCallback}) => {
     // see if we're on any target locations
     for (let i = 0; i < targets.length; i++) {
       let target = targets[i];
-      if (cardCenterX >= target.left - 50 && cardCenterX <= target.left + 50
-          && cardCenterY >= target.top - 70 && cardCenterY <= target.top + 70) {
+      if (cardCenterX >= target.left - 55 && cardCenterX <= target.left + 55
+          && cardCenterY >= target.top - 81 && cardCenterY <= target.top + 81) {
         setTranslateX(down ? movement.x : withSpring(target.left + 2));
         setTranslateY(down ? movement.y : withSpring(target.top)); 
         if (!down) {
@@ -109,8 +109,8 @@ const Card = ({data, startOffset, positionCallback}) => {
         cursor: 'grab',
         translateX,
         translateY,
-        width: 95,
-        height: 140,
+        width: 120,
+        height: 165,
         backgroundImage,
         backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',

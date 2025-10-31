@@ -76,7 +76,7 @@ const Game = ({ deckNumber, gameStateCallback }) => {
     card.attachedCards = [];
     card.damageCounters = 0;
     setHand([...hand, card]);
-    setDiscard(discard.filter((c) => c.numberInDeck !== card.numberInDeck));
+    setDiscard(discard.filter((c) => c.numberInDeck != card.numberInDeck));
   };
 
   const tightenHandLayout = () =>

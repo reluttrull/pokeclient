@@ -65,7 +65,7 @@ const PlayArea = ({
           <Card
             key={`${card.numberInDeck}-${rerenderKey}`}
             data={card}
-            startOffset={index * 20}
+            startOffset={index * 30}
             positionCallback={cardCallback}
           />
         ))}

@@ -30,7 +30,7 @@ export const apiDrawTopCard = (gameGuid, hand, setHand) =>
 
 export const apiEndGame = (gameGuid, callback) =>
   fetch(`${BASE}/endgame/${gameGuid.current}`, { method: "PUT" }).then((response) => {
-    if (response.status === 204) callback({ ended: true });
+    if (response.status == 204) callback({ ended: true });
   });
 
 export const apiFlipCoin = (setCoinResult) =>
@@ -52,7 +52,7 @@ export const apiDrawSpecificCard = (gameGuid, card, hand, setHand, cardsInDeck, 
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
   }).then((response) => {
-    if (response.status === 204) {
+    if (response.status == 204) {
       card.attachedCards = [];
       card.damageCounters = 0;
       setHand([...hand, card]);

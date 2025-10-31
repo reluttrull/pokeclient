@@ -42,8 +42,8 @@
 }
 
 .card-size {
-  width: 95px;
-  height: 140px;
+  width: 120px;
+  height: 165px;
 }
 
 .read-the-docs {
@@ -53,8 +53,8 @@
 .card-target {
   position: absolute;
   z-index: 0;
-  width: 100px;
-  height: 140px;
+  width: 125px;
+  height: 165px;
 }
 
 #user-active {
@@ -101,17 +101,17 @@
 
 #discard-select-button {
   top: 60px;
-  left: 120px;
+  left: 140px;
   width: 180px;
   background-color: rgba(20, 20, 20, 0.7);
 }
 
 #deck {
   position:absolute;
-  top: 240px;
+  top: 210px;
   left: 1050px;
-  width: 100px;
-  height: 140px;
+  width: 120px;
+  height: 165px;
 }
 
 #hand-area {
@@ -119,7 +119,7 @@
   top: 450px;
   left: 420px;
   width: 200px;
-  height: 140px;
+  height: 165px;
   background-color: rgba(58, 58, 92, 0.5);
 }
 
@@ -156,19 +156,19 @@
 #add-damage-counter-button {
   position: absolute;
   top: 0px; 
-  left: 100px;
+  left: 125px;
 }
 
 #damage-display {
   position: absolute;
   top: 20px; 
-  left: 105px;
+  left: 130px;
 }
 
 #remove-damage-counter-button {
   position: absolute;
   top: 50px; 
-  left: 100px;
+  left: 125px;
 }
 
 #hand-tighten-button {
@@ -199,26 +199,26 @@
 
 .poisoned {
   position: absolute; 
-  top: 100px; 
-  left: 100px;
+  top: 80px; 
+  left: 125px;
 }
 
 .asleep {
   position: absolute; 
   top: 100px; 
-  left: 120px;
+  left: 125px;
 }
 
 .paralyzed {
   position: absolute; 
   top: 120px; 
-  left: 100px;
+  left: 125px;
 }
 
 .confused {
   position: absolute; 
-  top: 120px; 
-  left: 120px;
+  top: 140px; 
+  left: 125px;
 }
 
 .active-condition {

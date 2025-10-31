@@ -170,8 +170,8 @@ export async function attachOrSwapCard(
     // remove stage two and trainer card from hand...
     setHand(
       hand.filter((c) =>
-          c.numberInDeck !== stageTwo.numberInDeck &&
-          c.numberInDeck !== cardToAttach.numberInDeck)
+          c.numberInDeck != stageTwo.numberInDeck &&
+          c.numberInDeck != cardToAttach.numberInDeck)
     );
     // ...and discard Pokémon Breeder
     setDiscard([...discard, cardToAttach]);
@@ -209,7 +209,7 @@ export async function attachOrSwapCard(
     cardToAttach.damageCounters = bench[benchPosition].damageCounters;
     const newBench = bench.map((c, i) => i == benchPosition ? cardToAttach : c);
     setBench(newBench);
-  } else if (active === cardToAttach) { // swap with active?
+  } else if (active == cardToAttach) { // swap with active?
     setActive(bench[benchPosition]);
     const newBench = bench.map((c, i) => i == benchPosition ? cardToAttach : c);
     setBench(newBench);
