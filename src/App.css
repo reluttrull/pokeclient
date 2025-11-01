@@ -107,6 +107,13 @@
   background-color: rgba(20, 20, 20, 0.7);
 }
 
+#discard-hand-button {
+  top: 110px;
+  left: 150px;
+  width: 180px;
+  background-color: rgba(200, 10, 10, 0.7);
+}
+
 #deck {
   position:absolute;
   top: 210px;

@@ -11,7 +11,7 @@ const PlayArea = ({
   hand, bench, active, discard, prizes,
   numberInDeck, rerenderKey,
   cardCallback, tightenHandLayout,
-  drawPrize, handleSelectFromDiscard,
+  drawPrize, handleSelectFromDiscard, handleDiscardHand,
   handleSelectFromDeck, handleShuffle
 }) => {
   return (
@@ -38,6 +38,7 @@ const PlayArea = ({
         <button id="discard-select-button" className="button" onClick={handleSelectFromDiscard}>
           Select from discard
         </button>
+        <button id="discard-hand-button" className="button" onClick={handleDiscardHand}>Discard hand</button>
         {discard.length > 0 && (
           <StaticCard key={discard[0].numberInDeck} data={discard[0]} />
         )}

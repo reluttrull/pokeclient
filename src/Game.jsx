@@ -1,6 +1,7 @@
 // Game.jsx
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
+import confirm from './ConfirmationDialog.jsx';
 import PlayArea from "./PlayArea.jsx";
 import CoinFlip from "./CoinFlip.jsx";
 import Loading from "./Loading.jsx";
@@ -69,6 +70,12 @@ const Game = ({ deckNumber, gameStateCallback }) => {
   };
   const handleCloseSelectFromDeck = () => setIsSelectingDeck(false);
   const handleSelectFromDiscard = () => setIsSelectingDiscard(true);
+  const handleDiscardHand =  async () => {
+    if (await confirm({ confirmation: 'Do you really want to discard your whole hand?' })) {
+      setDiscard([...hand, ...discard]);
+      setHand([]);
+    }
+  }
   const handleCloseSelectFromDiscard = () => setIsSelectingDiscard(false);
   const addFromDeckToHand = (card) =>
     apiDrawSpecificCard(gameGuid, card, hand, setHand, cardsInDeck, setCardsInDeck);
@@ -163,6 +170,7 @@ const Game = ({ deckNumber, gameStateCallback }) => {
             tightenHandLayout={tightenHandLayout}
             drawPrize={drawPrize}
             handleSelectFromDiscard={handleSelectFromDiscard}
+            handleDiscardHand={handleDiscardHand}
             handleSelectFromDeck={handleSelectFromDeck}
             handleShuffle={handleShuffle}
           />
