@@ -196,6 +196,7 @@ export async function attachOrSwapCard(
     if (shouldAttachAsEnergy(active, cardToAttach)) { // attach energy?
       // handle Electrode Buzzap power
       setDiscard([...cardToAttach.attachedCards, ...discard]);
+      cardToAttach.attachedCards = [];
       active.attachedCards.push(cardToAttach);
     } else if (hand.includes(cardToAttach) &&
       cardToAttach.evolveFrom == active.name) { // evolve?
@@ -218,6 +219,7 @@ export async function attachOrSwapCard(
   if (shouldAttachAsEnergy(bench[benchPosition], cardToAttach)) { // attach energy?
     // handle Electrode Buzzap power
     setDiscard([...cardToAttach.attachedCards, ...discard]);
+    cardToAttach.attachedCards = [];
     bench[benchPosition].attachedCards.push(cardToAttach);
   } else if (hand.includes(cardToAttach) &&
     cardToAttach.evolveFrom == bench[benchPosition].name) { // evolve?

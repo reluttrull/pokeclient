@@ -18,6 +18,7 @@ const Card = ({data, startOffset, positionCallback}) => {
           .toSorted((a,b) => a.name - b.name));
   const [mockEnergy, setMockEnergy] = useState(data.attachedCards
           .filter((attachedCard) => attachedCard.name == "Electrode"));
+  const [rerenderKey, setRerenderKey] = useState(0);
 
   let urlstring = `url('${data.image}/low.webp')`;
   let hqurlstring = `${data.image}/high.webp`;
@@ -101,6 +102,7 @@ const Card = ({data, startOffset, positionCallback}) => {
           .toSorted((a,b) => a.name - b.name));
     setMockEnergy(data.attachedCards
           .filter((attachedCard) => attachedCard.name == "Electrode"));
+    setRerenderKey((p) => p + 1);
     }, [JSON.stringify(data.attachedCards)]);
 
   return (
@@ -140,8 +142,10 @@ const Card = ({data, startOffset, positionCallback}) => {
       {mockEnergy.length > 0 &&
           mockEnergy.map((card, index) => (
         <>
-          <AttachedEnergy key={card.numberInDeck + '-a'} cardName={card.name} offset={(attachedEnergy.length + index) * 20} deleteCallback={handleEnergyDelete} />
-          <AttachedEnergy key={card.numberInDeck + '-b'} cardName={card.name} offset={(attachedEnergy.length + index + 1) * 20} deleteCallback={handleEnergyDelete} />
+          <AttachedEnergy key={`${card.numberInDeck}-${rerenderKey}-a`} cardName={card.name} 
+              offset={(attachedEnergy.length * 20) + (index * 40)} deleteCallback={handleEnergyDelete} />
+          <AttachedEnergy key={`${card.numberInDeck}-${rerenderKey}-b`} cardName={card.name} 
+              offset={(attachedEnergy.length * 20) + (index * 40) + 20} deleteCallback={handleEnergyDelete} />
         </>
       ))}
       {data.category == "Pokemon" && <Damage damageCounters={data.damageCounters} damageCallback={handleDamageChange} />}
