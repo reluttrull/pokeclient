@@ -41,13 +41,18 @@ const App = () => {
   return (
     <>
       {!gameStarted && 
-        <div>
+        <div style={{textAlign:'left'}}>
           <input type="radio" id="haymaker" value="0" checked={deckNum == "0"} onChange={handleDeckNumChange} />
           <label htmlFor="haymaker">Haymaker</label>
+          <br />
           <input type="radio" id="raindance" value="1" checked={deckNum == "1"} onChange={handleDeckNumChange} />
           <label htmlFor="raindance">Rain Dance</label>
+          <br />
           <input type="radio" id="machampalakazam" value="2" checked={deckNum == "2"} onChange={handleDeckNumChange} />
           <label htmlFor="machampalakazam">Machamp/Alakazam</label>
+          <br />
+          <input type="radio" id="buzzapdos" value="3" checked={deckNum == "3"} onChange={handleDeckNumChange} />
+          <label htmlFor="buzzapdos">Buzzapdos</label>
           <br />
           <br />
           <button onClick={startGame}>Start game</button>

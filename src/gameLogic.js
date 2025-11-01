@@ -1,6 +1,16 @@
 // logic helper functions
 import { apiFetchValidEvolutions } from "./gameApi.js";
 
+function allowedToBeInEmptySpot(card) {
+  // must be a Pokemon card
+  if (card.category != "Pokemon") return false;
+  // always allow basics
+  if (card.stage == "Basic") return true;
+  // allow evolutions to move once in play
+  if (card.attachedCards.length > 0) return true;
+  return false;
+}
+
 export function initializeGame(deckNumber, gameGuid, setHand, mulligans) {
   fetch(
     `https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getnewgame/${deckNumber}`
@@ -55,8 +65,7 @@ export async function placeCardInSpot({
         let attachedOk = await attachOrSwapCard(card, true);
         if (!attachedOk) return;
       } else {
-        if (card.category != "Pokemon"
-          || (card.stage != "Basic" && !card.attachedCards.find((c) => c.stage == "Basic"))) {
+        if (!allowedToBeInEmptySpot(card)) {
           return; // placed in an empty spot but not allowed to be
         }
         setActive(card);
@@ -78,11 +87,7 @@ export async function placeCardInSpot({
         let attachedOk = await attachOrSwapCard(card, false, idx);
         if (!attachedOk) return;
       } else {
-        if (
-          card.category != "Pokemon" ||
-          (card.stage != "Basic" &&
-            !card.attachedCards.find((c) => c.stage == "Basic"))
-        )
+        if (!allowedToBeInEmptySpot(card))
           return; // placed in an empty spot but not allowed to be
         setBench([...bench, card]);
       }
@@ -124,6 +129,15 @@ export function tightenHandLayoutLogic(hand, setHand, setRerenderKey) {
   );
   setHand(sorted);
   setRerenderKey((p) => p + 1); // make sure hand re-renders
+}
+
+function shouldAttachAsEnergy(baseCard, cardToAttach) {
+  if (cardToAttach.category == "Energy") return true;
+  if (baseCard.name != "Voltorb" && cardToAttach.name == "Electrode" && cardToAttach.attachedCards.length > 0) {
+    // get rid of Electrode???
+    return true;
+  }
+  return false;
 }
 
 export async function attachOrSwapCard(
@@ -179,7 +193,9 @@ export async function attachOrSwapCard(
   }
 
   if (isActive) {
-    if (cardToAttach.category == "Energy") { // attach energy?
+    if (shouldAttachAsEnergy(active, cardToAttach)) { // attach energy?
+      // handle Electrode Buzzap power
+      setDiscard([...cardToAttach.attachedCards, ...discard]);
       active.attachedCards.push(cardToAttach);
     } else if (hand.includes(cardToAttach) &&
       cardToAttach.evolveFrom == active.name) { // evolve?
@@ -199,7 +215,9 @@ export async function attachOrSwapCard(
     return true;
   }
 
-  if (cardToAttach.category == "Energy") { // attach energy?
+  if (shouldAttachAsEnergy(bench[benchPosition], cardToAttach)) { // attach energy?
+    // handle Electrode Buzzap power
+    setDiscard([...cardToAttach.attachedCards, ...discard]);
     bench[benchPosition].attachedCards.push(cardToAttach);
   } else if (hand.includes(cardToAttach) &&
     cardToAttach.evolveFrom == bench[benchPosition].name) { // evolve?
