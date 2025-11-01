@@ -48,9 +48,14 @@ const Card = ({data, startOffset, positionCallback}) => {
   useDrag(ref, ({ down, movement }) => {
     if (!ref.current) return;
 
+    const scrollX = window.scrollX; // account for scroll
+    const scrollY = window.scrollY;
+
+    const scale = window.visualViewport?.scale ?? 1; // account for zoom
+
     const rect = ref.current.getBoundingClientRect();
-    const cardCenterX = rect.left + rect.width / 2;
-    const cardCenterY = rect.top + rect.height / 2;
+    const cardCenterX = (rect.left + rect.width / 2) / scale + scrollX;
+    const cardCenterY = (rect.top + rect.height / 2) / scale + scrollY;
     
     // see if we're on any target locations
     for (let i = 0; i < targets.length; i++) {
