@@ -62,6 +62,11 @@
   }
 }
 
+.shuffle-reminder {
+  border: 2px solid #007BFF;
+  box-shadow: 0 0 10px 3px rgba(0, 123, 255, 0.7);
+}
+
 .button {
   position: absolute;
   top: 80px;
