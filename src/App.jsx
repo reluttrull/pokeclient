@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CoinFlip from './CoinFlip.jsx';
 import Game from './Game.jsx';
 import './App.css';
+import { apiGetAllDeckBriefs } from './deckApi.js';
 import baseset from './data/baseset.json';
 
 const App = () => {
+  const [deckBriefs, setDeckBriefs] = useState([]);
   const [deckNum, setDeckNum] = useState("0");
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
@@ -37,23 +39,22 @@ const App = () => {
   function handleDeckNumChange(event) {
     setDeckNum(event.target.value);
   }
+  
+  // on mount
+  useEffect(() => {
+    apiGetAllDeckBriefs(setDeckBriefs);
+  }, []);
 
   return (
     <>
       {!gameStarted && 
         <div style={{textAlign:'left'}}>
-          <input type="radio" id="haymaker" value="0" checked={deckNum == "0"} onChange={handleDeckNumChange} />
-          <label htmlFor="haymaker">Haymaker</label>
+          {deckBriefs && deckBriefs.map(brief => 
+          <div key={brief.deckId}>
+            <input type="radio" id={brief.name} value={brief.deckId} checked={deckNum == brief.deckId} onChange={handleDeckNumChange} />
+            <label htmlFor={brief.name}>{brief.name}</label>
           <br />
-          <input type="radio" id="raindance" value="1" checked={deckNum == "1"} onChange={handleDeckNumChange} />
-          <label htmlFor="raindance">Rain Dance</label>
-          <br />
-          <input type="radio" id="machampalakazam" value="2" checked={deckNum == "2"} onChange={handleDeckNumChange} />
-          <label htmlFor="machampalakazam">Machamp/Alakazam</label>
-          <br />
-          <input type="radio" id="buzzapdos" value="3" checked={deckNum == "3"} onChange={handleDeckNumChange} />
-          <label htmlFor="buzzapdos">Buzzapdos</label>
-          <br />
+          </div>)}
           <br />
           <button onClick={startGame}>Start game</button>
         </div>}
