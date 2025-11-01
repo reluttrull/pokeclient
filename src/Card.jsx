@@ -18,7 +18,8 @@ const Card = ({data, startOffset, positionCallback}) => {
           .toSorted((a,b) => a.name - b.name));
   const [mockEnergy, setMockEnergy] = useState(data.attachedCards
           .filter((attachedCard) => attachedCard.name == "Electrode"));
-  const [rerenderKey, setRerenderKey] = useState(0);
+  const [rerenderEnergyKey, setRerenderEnergyKey] = useState(0);
+  const [rerenderDmgKey, setRerenderDmgKey] = useState(0);
 
   let urlstring = `url('${data.image}/low.webp')`;
   let hqurlstring = `${data.image}/high.webp`;
@@ -79,6 +80,7 @@ const Card = ({data, startOffset, positionCallback}) => {
 
   function handleDamageChange(change) {
     data.damageCounters += change;
+    setRerenderDmgKey((p) => p + 1);
   }
 
   function handleEnergyDelete(cardName) {
@@ -107,7 +109,7 @@ const Card = ({data, startOffset, positionCallback}) => {
           .toSorted((a,b) => a.name - b.name));
     setMockEnergy(data.attachedCards
           .filter((attachedCard) => attachedCard.name == "Electrode"));
-    setRerenderKey((p) => p + 1);
+    setRerenderEnergyKey((p) => p + 1);
     }, [JSON.stringify(data.attachedCards)]);
 
   return (
@@ -146,14 +148,14 @@ const Card = ({data, startOffset, positionCallback}) => {
       ))}
       {mockEnergy.length > 0 &&
           mockEnergy.map((card, index) => (
-        <>
-          <AttachedEnergy key={`${card.numberInDeck}-${rerenderKey}-a`} cardName={card.name} 
+        <div key={`${card.numberInDeck}-${rerenderEnergyKey}`}>
+          <AttachedEnergy cardName={card.name} 
               offset={(attachedEnergy.length * 20) + (index * 40)} deleteCallback={handleEnergyDelete} />
-          <AttachedEnergy key={`${card.numberInDeck}-${rerenderKey}-b`} cardName={card.name} 
+          <AttachedEnergy cardName={card.name} 
               offset={(attachedEnergy.length * 20) + (index * 40) + 20} deleteCallback={handleEnergyDelete} />
-        </>
+        </div>
       ))}
-      {data.category == "Pokemon" && <Damage damageCounters={data.damageCounters} damageCallback={handleDamageChange} />}
+      {data.category == "Pokemon" && <Damage key={`${data.numberInDeck}-dmg${rerenderDmgKey}`} damageCounters={data.damageCounters} damageCallback={handleDamageChange} />}
       {data.category == "Pokemon" && <SpecialConditions />}
     </animate.div>
     <Modal className="card-overlay-container"

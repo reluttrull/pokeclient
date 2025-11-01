@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCirclePlus, FaCircleMinus } from 'react-icons/fa6';
 import './App.css';
 
@@ -7,9 +7,12 @@ const Damage = ({damageCounters, damageCallback}) => {
 
   function changeDamage(change) {
     if (change < 0 && damageCounters == 0) return;
-    setDisplayDamageCounters(displayDamageCounters + change);
     damageCallback(change);
   }
+
+  useEffect(() => {
+    setDisplayDamageCounters(damageCounters);
+  }, [damageCounters]);
 
   return (
     <>
