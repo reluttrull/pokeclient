@@ -1,5 +1,4 @@
 # pokeclient
-## In active development!
 
 PokeTCG is an educational tool meant to aid in gameplay of the Pokemon Trading Card Game. This app will simulate the user's half of the game area, keep track of card states, and validate some basic win conditions.
 
