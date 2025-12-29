@@ -1,16 +1,15 @@
 # pokeclient
 
-PokeTCG is an educational tool meant to aid in gameplay of the Pokemon Trading Card Game. This app will simulate the user's half of the game area, keep track of card states, and validate some basic win conditions.
-
-Each player uses two devices: one large device to handle their half of the game board, and one small device to handle their hand of cards.
-<p align="center">
-  <img width="890" alt="pokedemo" src="https://github.com/user-attachments/assets/0f6bedd5-68da-4462-8217-e69228aa4bec" />
-</p>
+PokeTCG is an educational tool meant to aid in gameplay of the Pokemon Trading Card Game. This app simulates the user's half of the game area, keeps track of card states, and validates some basic win conditions.
 
 Currently deployed [here](https://reluttrull.github.io/pokeclient/) (be patient: the server may cold start)
 
 [PokeServer repo](https://github.com/reluttrull/PokeServer)
 
+Each player uses two devices: one large device to handle their half of the game board, and one small device to handle their hand of cards.
+<p align="center">
+  <img width="890" alt="pokedemo" src="https://github.com/user-attachments/assets/0f6bedd5-68da-4462-8217-e69228aa4bec" />
+</p>
 
 <p align="center">
 <img width="890" alt="landing page" src="https://github.com/user-attachments/assets/96634da1-a034-47ff-b1ea-1befd2f974f9" />
